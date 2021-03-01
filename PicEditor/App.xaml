@@ -1,0 +1,24 @@
+﻿<Application x:Class="PicEditor.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:PicEditor"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="WinBgColor" Color="#333436"/>
+            <SolidColorBrush x:Key="PicBgColor" Color="#2B2B2B"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="style/Menu.xaml"/>
+                <ResourceDictionary Source="style/RadioButton.xaml"/>
+                <ResourceDictionary Source="style/ScrollViewer.xaml"/>
+                <ResourceDictionary Source="style/Slider.xaml"/>
+                <ResourceDictionary Source="style/Window.xaml"/>
+                <ResourceDictionary Source="style/Button.xaml"/>
+                <ResourceDictionary Source="style/TabControl.xaml"/>
+                <ResourceDictionary Source="style/Rectangle.xaml"/>
+                <ResourceDictionary Source="style/CheckBox.xaml"/>
+                <ResourceDictionary Source="style/ListBox.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

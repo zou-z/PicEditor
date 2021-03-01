@@ -1,0 +1,43 @@
+﻿<Window x:Class="PicEditor.window.PicResizeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PicEditor.window"
+        mc:Ignorable="d"
+        Title="图像尺寸" Height="260" Width="280"
+        ResizeMode="NoResize" WindowStartupLocation="CenterOwner" WindowStyle="None" KeyDown="Window_KeyDown">
+    <Border BorderBrush="RoyalBlue" BorderThickness="1">
+        <Grid Background="#282828">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" MouseMove="Grid_MouseMove">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="46"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="图像尺寸" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White" FontSize="15" FontWeight="Bold"/>
+                <Button Grid.Column="1" Width="46" Height="32" Style="{StaticResource TitleButtonStyle}" Click="Close" Content="&#xE8BB;" Foreground="White" ToolTip="快捷键：Esc"/>
+            </Grid>
+            <StackPanel Grid.Row="1">
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center" Background="#404040" Height="30">
+                    <TextBlock Text="宽度" FontSize="14" Foreground="White" VerticalAlignment="Center" Margin="15,0,15,0"/>
+                    <TextBox Text="" Width="150" Background="#303030" Foreground="White" BorderThickness="0" Padding="8,0,0,0" VerticalContentAlignment="Center" CaretBrush="White" InputMethod.IsInputMethodEnabled="False" TextChanged="ToInt" x:Name="W" LostFocus="CalcProportion"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,30,0,0" HorizontalAlignment="Center" Background="#404040" Height="30">
+                    <TextBlock Text="高度" FontSize="14" Foreground="White" VerticalAlignment="Center" Margin="15,0,15,0"/>
+                    <TextBox Text="" Width="150" Background="#303030" Foreground="White" BorderThickness="0" Padding="8,0,0,0" VerticalContentAlignment="Center" CaretBrush="White" InputMethod.IsInputMethodEnabled="False" TextChanged="ToInt" x:Name="H" LostFocus="CalcProportion"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="35,18,0,0"  Height="30">
+                    <CheckBox x:Name="KeepProportion" Content=" 保持比例" Foreground="White" FontSize="15" VerticalContentAlignment="Center" IsChecked="True"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                    <Button Width="95" Height="32" Content="确认" Background="#404040" Margin="33,0,0,0" Click="Confirm"/>
+                    <Button Width="95" Height="32" Content="取消" Background="#404040" Margin="22,0,0,0" Click="Close"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

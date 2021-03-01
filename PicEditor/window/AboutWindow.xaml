@@ -1,0 +1,43 @@
+﻿<Window x:Class="PicEditor.window.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PicEditor.window"
+        mc:Ignorable="d"
+        Title="关于" Height="536" Width="350" BorderThickness="7" AllowsTransparency="True"
+        ResizeMode="NoResize" WindowStartupLocation="CenterOwner" WindowStyle="None" KeyDown="Window_KeyDown" Loaded="Window_Loaded">
+    <Window.Effect>
+        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="Gray"/>
+    </Window.Effect>
+    <Grid>
+        <Path Data="M 0,0 350,0 350 215 285 256 0,215 Z" MouseMove="Path_MouseMove">
+            <Path.Fill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Offset="0.0" Color="#4169E1"/>
+                    <GradientStop Offset="0.4" Color="#6E5EE5"/>
+                    <GradientStop Offset="0.7" Color="#9055E8"/>
+                    <GradientStop Offset="1.0" Color="#B24DEB"/>
+                </LinearGradientBrush>
+            </Path.Fill>
+        </Path>
+        <TextBlock Text="关于" Foreground="White" FontSize="14" VerticalAlignment="Top" Margin="10,10,0,0"/>
+        <Button Width="46" Height="32" Style="{StaticResource TitleButtonStyle}" Click="Close" Content="&#xE8BB;" Foreground="White" ToolTip="快捷键：Esc" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+        <StackPanel Margin="45,82,0,0" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/PicEditor;component/PicEditor.ico" Width="60" Height="60" HorizontalAlignment="Left"/>
+                <TextBlock Text="PicEditor" Foreground="White" FontSize="33" VerticalAlignment="Center" Margin="20,0,0,0"/>
+            </StackPanel>
+            <TextBlock Text="图片编辑器" Foreground="White" FontSize="15" Margin="180,10,0,0"/>
+        </StackPanel>
+        <StackPanel Margin="45,250,0,0">
+            <TextBox Text="" x:Name="PicEditorVersion" FontSize="16" FontWeight="Bold" IsReadOnly="True" BorderThickness="0" Width="100" HorizontalAlignment="Left"/>
+            <TextBox Text="2020.06.18" FontSize="16" FontWeight="Bold" Margin="0,15,0,0" IsReadOnly="True" BorderThickness="0"/>
+            <TextBox Text="Email : zzvr@outlook.com" FontSize="16" FontWeight="Bold" Margin="0,15,0,0" IsReadOnly="True" BorderThickness="0"/>
+            <TextBox Text="QQ : 1575375168" FontSize="16" FontWeight="Bold" Margin="0,15,0,0" IsReadOnly="True" BorderThickness="0"/>
+            <TextBox Text="OS : 获取中..." x:Name="OSInfo" FontSize="16" FontWeight="Bold" Margin="0,15,0,0" IsReadOnly="True" BorderThickness="0" TextWrapping="NoWrap"/>
+            <TextBox Text="https://github.com/zou-z/PicEditor/releases" FontSize="16" FontWeight="Bold" Margin="0,15,0,0" IsReadOnly="True" BorderThickness="0" TextWrapping="Wrap" TextDecorations="UnderLine" Cursor="Hand" PreviewMouseLeftButtonDown="GoToHomePage"/>
+            <TextBox Text="© 2020 ZZH" Margin="0,20,0,0" Width="76" IsReadOnly="True" BorderThickness="0"/>
+        </StackPanel>
+    </Grid>
+</Window>
