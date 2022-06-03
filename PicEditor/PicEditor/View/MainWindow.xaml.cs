@@ -23,6 +23,10 @@ namespace PicEditor
         public MainWindow()
         {
             InitializeComponent();
+#if DEBUG
+            Left = 2000;
+            Top = 700;
+#endif
         }
     }
 }

@@ -1,0 +1,14 @@
+﻿<StackPanel x:Class="PicEditor.View.EditModePanel"
+            x:ClassModifier="internal"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:local="clr-namespace:PicEditor.View"
+            xmlns:viewmodel="clr-namespace:PicEditor.ViewModel"
+            xmlns:model="clr-namespace:PicEditor.Model"
+            mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="50" Background="AliceBlue"
+            DataContext="{x:Static viewmodel:VmLocator.EditMode}">
+    <RadioButton Content="移动" IsChecked="{Binding EditMode.Mode,Mode=TwoWay,Converter={StaticResource editModeConverter},ConverterParameter=0}"/>
+    <RadioButton Content="选择" IsChecked="{Binding EditMode.Mode,Mode=TwoWay,Converter={StaticResource editModeConverter},ConverterParameter=1}"/>
+</StackPanel>
