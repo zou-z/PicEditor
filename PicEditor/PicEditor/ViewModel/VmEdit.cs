@@ -24,9 +24,9 @@ namespace PicEditor.ViewModel
 
         public void SetPicture(ImageData imageData)
         {
+            Layers.CanvasSize = new Size(imageData.Width, imageData.Height);
             Layers.PictureLayers.Clear();
             Layers.PictureLayers.Add(new PictureLayer(imageData));
-            Layers.CanvasSize = new Size(imageData.Width, imageData.Height);
             EditArea.Scale = 1.0;
 
 

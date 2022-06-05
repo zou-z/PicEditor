@@ -27,10 +27,11 @@ namespace PicEditor.View.Control
             RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
         }
 
-        public void SetSize(double width, double height)
+        public void SetSize(double width, double height, double scale)
         {
             Width = image.Width = width;
             Height = image.Height = height;
+            RenderOptions.SetBitmapScalingMode(image, scale >= 4 ? BitmapScalingMode.NearestNeighbor : BitmapScalingMode.Linear);
         }
 
         private readonly Image image;

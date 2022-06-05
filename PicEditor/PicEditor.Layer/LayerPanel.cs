@@ -82,6 +82,7 @@ namespace PicEditor.Layer
         private readonly MoveContext moveContext;
         private bool isMousePressed = false;
         private bool isScalingByMouseWheel = false;
+        private bool isEmptyContent = false;
 
         private void LayerPanel_Loaded(object sender, RoutedEventArgs e)
         {
@@ -159,6 +160,21 @@ namespace PicEditor.Layer
                         canvas.Children.Add(element);
                     }
                 }
+            }
+            if (isEmptyContent)
+            {
+                isEmptyContent = false;
+                double width = CanvasSize.Width + canvas.Margin.Left + canvas.Margin.Right;
+                double height = CanvasSize.Height + canvas.Margin.Top + canvas.Margin.Bottom;
+                Dispatcher.BeginInvoke(() =>
+                {
+                    ScrollToHorizontalOffset((width - ActualWidth) / 2);
+                    ScrollToVerticalOffset((height - ActualHeight) / 2);
+                });
+            }
+            else
+            {
+                isEmptyContent = Layers?.Count == 0 && UpperLayers?.Count == 0;
             }
         }
 
@@ -246,7 +262,7 @@ namespace PicEditor.Layer
             {
                 if (child is ILayer layer && layer != null)
                 {
-                    layer.SetSize(canvas.Width, canvas.Height);
+                    layer.SetSize(canvas.Width, canvas.Height, scale);
                 }
             }
             scaleContext.Set(scale);
@@ -280,7 +296,7 @@ namespace PicEditor.Layer
             {
                 if (child is ILayer layer && layer != null)
                 {
-                    layer.SetSize(canvas.Width, canvas.Height);
+                    layer.SetSize(canvas.Width, canvas.Height, scale);
                 }
             }
             scaleContext.Set(scale);
@@ -294,8 +310,8 @@ namespace PicEditor.Layer
 
         public static readonly DependencyProperty LayersProperty = DependencyProperty.Register("Layers", typeof(ObservableCollection<ILayer>), typeof(LayerPanel), new PropertyMetadata(null, new PropertyChangedCallback(LayersSourceChanged)));
         public static readonly DependencyProperty UpperLayersProperty = DependencyProperty.Register("UpperLayers", typeof(ObservableCollection<ILayer>), typeof(LayerPanel), new PropertyMetadata(null, new PropertyChangedCallback(LayersSourceChanged)));
-        public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register("Scale", typeof(double), typeof(LayerPanel), new PropertyMetadata(0d,new PropertyChangedCallback(ScaleChanged)));
-        public static readonly DependencyProperty CanvasSizeProperty = DependencyProperty.Register("CanvasSize", typeof(Size), typeof(LayerPanel), new PropertyMetadata(new Size(0, 0),new PropertyChangedCallback(CanvasSizeChanged)));
+        public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register("Scale", typeof(double), typeof(LayerPanel), new PropertyMetadata(0d, new PropertyChangedCallback(ScaleChanged)));
+        public static readonly DependencyProperty CanvasSizeProperty = DependencyProperty.Register("CanvasSize", typeof(Size), typeof(LayerPanel), new PropertyMetadata(new Size(0, 0), new PropertyChangedCallback(CanvasSizeChanged)));
         public static readonly DependencyProperty CanvasMarginProperty = DependencyProperty.Register("CanvasMargin", typeof(Thickness), typeof(LayerPanel), new PropertyMetadata(new Thickness(0), new PropertyChangedCallback(CanvasMarginChanged)));
         public static readonly DependencyProperty MousePositionProperty = DependencyProperty.Register("MousePosition", typeof(Point), typeof(LayerPanel), new PropertyMetadata(new Point(0, 0)));
         public static readonly DependencyProperty IsCanvasMoveEnabledProperty = DependencyProperty.Register("IsCanvasMoveEnabled", typeof(bool), typeof(LayerPanel), new PropertyMetadata(true));
