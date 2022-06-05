@@ -10,7 +10,7 @@ namespace PicEditor.Model
     internal class EditMode : ObservableObject
     {
         private Modes mode = Modes.Move;
-        private bool isContentMoveEnabled = true;
+        private bool isCanvasMoveEnabled = true;
 
         public enum Modes
         {
@@ -24,14 +24,14 @@ namespace PicEditor.Model
             set
             {
                 SetProperty(ref mode, value);
-                IsContentMoveEnabled = mode == Modes.Move;
+                IsCanvasMoveEnabled = mode == Modes.Move;
             }
         }
 
-        public bool IsContentMoveEnabled
+        public bool IsCanvasMoveEnabled
         {
-            get => isContentMoveEnabled;
-            set => SetProperty(ref isContentMoveEnabled, value);
+            get => isCanvasMoveEnabled;
+            set => SetProperty(ref isCanvasMoveEnabled, value);
         }
     }
 }

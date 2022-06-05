@@ -11,4 +11,9 @@
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PicEditor.Basic\PicEditor.Basic.csproj" />
+    <ProjectReference Include="..\PicEditor.Layer\PicEditor.Layer.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -5,3 +5,7 @@
 /PicEditor/.vs
 /PicEditor/PicEditor/bin/Debug/net6.0-windows
 /PicEditor/PicEditor/obj
+/PicEditor/PicEditor.Basic/bin/Debug/net6.0-windows
+/PicEditor/PicEditor.Basic/obj
+/PicEditor/PicEditor.Layer/bin/Debug/net6.0-windows
+/PicEditor/PicEditor.Layer/obj

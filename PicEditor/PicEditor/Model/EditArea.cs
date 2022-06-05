@@ -19,12 +19,14 @@ namespace PicEditor.Model
             set => SetProperty(ref scale, value);
         }
 
+        // 滚动条横向移动距离
         public double LeftOffset
         {
             get => leftOffset;
             set => SetProperty(ref leftOffset, value);
         }
 
+        // 滚动条纵向移动距离
         public double TopOffset
         {
             get => topOffset;

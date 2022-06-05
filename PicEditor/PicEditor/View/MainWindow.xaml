@@ -5,14 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PicEditor"
         xmlns:view="clr-namespace:PicEditor.View"
-        xmlns:control="clr-namespace:PicEditor.View.Control"
-        xmlns:viewmodel="clr-namespace:PicEditor.ViewModel"
+        xmlns:vm="clr-namespace:PicEditor.ViewModel"
+        xmlns:layer="clr-namespace:PicEditor.Layer;assembly=PicEditor.Layer"
+        xmlns:control="clr-namespace:PicEditor.Basic.Control;assembly=PicEditor.Basic"
         Title="MainWindow" Height="550" Width="800">
     <DockPanel>
         <Menu DockPanel.Dock="Top" Height="30">
             <MenuItem Header="文件">
                 <MenuItem Header="打开">
-                    <MenuItem Header="本地文件" Command="{Binding Source={x:Static viewmodel:VmLocator.File},Path=OpenFileCommand,Mode=OneTime}"/>
+                    <MenuItem Header="本地文件" Command="{Binding Source={x:Static vm:VmLocator.File},Path=OpenFileCommand,Mode=OneTime}"/>
                 </MenuItem>
                 <MenuItem Header="退出"/>
             </MenuItem>
@@ -25,8 +26,13 @@
         </Menu>
         <DockPanel>
             <view:EditModePanel DockPanel.Dock="Left" Width="50"/>
-            <Border DockPanel.Dock="Right" Width="200" Background="AliceBlue"/>
-            <control:ScrollViewerEx
+            <StackPanel DockPanel.Dock="Right" Width="200" Background="AliceBlue">
+                <StackPanel Orientation="Horizontal">
+                    <control:ScaleSlider Width="150" Scale="{Binding Source={x:Static vm:VmLocator.Edit},Path=EditArea.Scale,Mode=TwoWay}"/>
+                    <TextBlock Text="{Binding Source={x:Static vm:VmLocator.Edit},Path=EditArea.Scale,Mode=OneWay,StringFormat={}{0:F2}}"/>
+                </StackPanel>
+            </StackPanel>
+            <!--<control:ScrollViewerEx
                 IsContentMoveEnabled="{Binding Source={x:Static viewmodel:VmLocator.EditMode},Path=EditMode.IsContentMoveEnabled,Mode=OneWay}"
                 Scale="{Binding Source={x:Static viewmodel:VmLocator.Edit},Path=EditArea.Scale,Mode=TwoWay}">
                 <Canvas Margin="100"
@@ -39,7 +45,15 @@
                     <Border Width="100" Height="100" Canvas.Left="100" Canvas.Top="100" Background="Orange"
                         BorderBrush="Red" BorderThickness="1"/>
                 </Canvas>
-            </control:ScrollViewerEx>
+            </control:ScrollViewerEx>-->
+
+
+            <layer:LayerPanel CanvasMargin="100"
+                              IsCanvasMoveEnabled="{Binding Source={x:Static vm:VmLocator.EditMode},Path=EditMode.IsCanvasMoveEnabled,Mode=OneWay}"
+                              Scale="{Binding Source={x:Static vm:VmLocator.Edit},Path=EditArea.Scale,Mode=TwoWay}"
+                              Layers="{Binding Source={x:Static vm:VmLocator.Edit},Path=Layers.PictureLayers,Mode=OneWay}"
+                              UpperLayers="{Binding Source={x:Static vm:VmLocator.Edit},Path=Layers.UpperLayers,Mode=OneWay}"
+                              CanvasSize="{Binding Source={x:Static vm:VmLocator.Edit},Path=Layers.CanvasSize,Mode=OneWay}"/>
         </DockPanel>
     </DockPanel>
 </Window>
