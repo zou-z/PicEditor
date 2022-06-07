@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace PicEditor.View.Control
 {
-    internal class PictureLayer : Canvas, ILayer
+    internal class PictureLayer : InkCanvas, ILayer
     {
         public PictureLayer(ImageData imageData)
         {
@@ -34,6 +34,16 @@ namespace PicEditor.View.Control
             RenderOptions.SetBitmapScalingMode(image, scale >= 4 ? BitmapScalingMode.NearestNeighbor : BitmapScalingMode.Linear);
         }
 
+        public VisualBrush GetVisualBrush()
+        {
+            VisualBrush brush = new()
+            {
+                Visual = image
+            };
+            return brush;
+        }
+
+        public string Guid { get; set; }
         private readonly Image image;
     }
 }

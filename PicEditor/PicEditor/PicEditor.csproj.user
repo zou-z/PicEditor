@@ -7,11 +7,23 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="View\AddPicturePanel.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Control\TreeViewEx.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\EditModePanel.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="View\AddPicturePanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Control\TreeViewEx.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\EditModePanel.xaml">
       <SubType>Designer</SubType>
     </Page>

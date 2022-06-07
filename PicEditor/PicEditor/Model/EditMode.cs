@@ -16,6 +16,7 @@ namespace PicEditor.Model
         {
             Move = 0,
             Select = 1,
+            AddPicture = 50,
         }
 
         public Modes Mode

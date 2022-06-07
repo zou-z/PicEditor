@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using PicEditor.Basic.Util;
 using PicEditor.Interface;
 using PicEditor.Model;
 using PicEditor.Util;
@@ -13,8 +14,9 @@ using System.Windows;
 
 namespace PicEditor.ViewModel
 {
-    internal class VmEdit : IEdit
+    internal class VmEdit : IEdit, ILayerDisplay
     {
+        private ILayerManage? layerManage;
         private EditArea? editArea = null;
         private Layers? layers = null;
 
@@ -22,14 +24,24 @@ namespace PicEditor.ViewModel
 
         public Layers Layers => layers ??= new Layers();
 
+        public void Initialize(ILayerManage layerManage)
+        {
+            this.layerManage = layerManage;
+        }
+
         public void SetPicture(ImageData imageData)
         {
-            Layers.CanvasSize = new Size(imageData.Width, imageData.Height);
-            Layers.PictureLayers.Clear();
-            Layers.PictureLayers.Add(new PictureLayer(imageData));
+            if (Layers.PictureLayers.Count == 0)
+            {
+                Layers.PictureLayers.Clear();
+                Layers.CanvasSize = new Size(imageData.Width, imageData.Height);
+            }
+            string guid = GuidUtil.GetGuid();
+            var item = new PictureLayer(imageData) { Guid = guid };
+            Layers.PictureLayers.Add(item);
             EditArea.Scale = 1.0;
 
-
+            layerManage?.AddLayerPicture(item.GetVisualBrush(), guid);
 
         }
     }

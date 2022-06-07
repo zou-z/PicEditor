@@ -1,0 +1,186 @@
+﻿<TreeView x:Class="PicEditor.View.Control.TreeViewEx"
+          x:ClassModifier="internal"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+          xmlns:local="clr-namespace:PicEditor.View.Control"
+          xmlns:vm="clr-namespace:PicEditor.ViewModel"
+          xmlns:model="clr-namespace:PicEditor.Model.Layer"
+          Padding="0,0,0,50"
+          DataContext="{x:Static vm:VmLocator.Layer}"
+          ItemsSource="{Binding Layers,Mode=OneWay}">
+    <TreeView.Resources>
+        <SolidColorBrush x:Key="AlmostTransparentColor"/>
+        <HierarchicalDataTemplate DataType="{x:Type model:LayerGroup}" ItemsSource="{Binding Children,Mode=OneWay}"/>
+        <Style x:Key="EyeCheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Border Background="{StaticResource AlmostTransparentColor}">
+                            <Path x:Name="EyePath" Width="20" Height="20" Fill="DimGray" Stretch="Uniform">
+                                <Path.Data>
+                                    M512.182857 849.481143c302.738286 0 511.817143-244.662857 511.817143-321.097143 0-76.818286-209.444571-321.097143-511.817143-321.097143C213.577143 207.268571 0 451.547429 0 528.365714c0 76.434286 213.193143 321.097143 512.182857 321.097143z m0-59.209143c-246.528 0-446.610286-209.078857-446.610286-261.906286 0-44.580571 200.082286-261.888 446.610286-261.888 245.796571 0 446.244571 217.307429 446.244572 261.888 0 52.845714-200.448 261.906286-446.244572 261.906286z m0-52.077714c116.534857 0 210.194286-95.542857 210.194286-209.828572 0-117.266286-93.659429-209.810286-210.194286-209.810285-117.266286 0-211.309714 92.525714-210.56 209.810285 0.365714 114.285714 93.293714 209.828571 210.56 209.828572z m0-140.123429c-38.948571 0-70.436571-31.488-70.436571-69.705143 0-38.582857 31.469714-69.668571 70.436571-69.668571 38.582857 0 70.070857 31.085714 70.070857 69.668571 0 38.217143-31.469714 69.705143-70.070857 69.705143z
+                                </Path.Data>
+                            </Path>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="EyePath" Property="Fill" Value="Gainsboro"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ExpanderButtonStyle" TargetType="ToggleButton">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Width="16" Height="30" Background="{StaticResource AlmostTransparentColor}">
+                            <Path x:Name="ExpandPath" Data="M0,0 L0,6 6,0Z" Stroke="Gainsboro" Margin="0,1,3,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Path.RenderTransform>
+                                    <RotateTransform Angle="135" CenterY="3" CenterX="3"/>
+                                </Path.RenderTransform>
+                            </Path>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="RenderTransform" TargetName="ExpandPath">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="180" CenterY="3" CenterX="3"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Fill" TargetName="ExpandPath" Value="Gainsboro"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Stroke" TargetName="ExpandPath" Value="#FF27C7F7"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Stroke" TargetName="ExpandPath" Value="#FF27C7F7"/>
+                                <Setter Property="Fill" TargetName="ExpandPath" Value="#FF27C7F7"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </TreeView.Resources>
+    <TreeView.Style>
+        <Style TargetType="TreeView">
+            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TreeView}">
+                        <Border SnapsToDevicePixels="true">
+                            <ScrollViewer Background="{TemplateBinding Background}" CanContentScroll="false" Focusable="false" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                                <ItemsPresenter Margin="{TemplateBinding Padding}"/>
+                            </ScrollViewer>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" Value="0.2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="TreeViewItem">
+                        <Setter Property="Foreground" Value="Gainsboro"/>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}"/>
+                        <Setter Property="IsExpanded" Value="True"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TreeViewItem">
+                                    <StackPanel>
+                                        <Border MouseLeftButtonDown="Item_MouseLeftButtonDown" AllowDrop="True"
+                                                MouseMove="Item_MouseMove"
+                                                DragEnter="Item_DragEnter"
+                                                DragLeave="Item_DragLeave"
+                                                Drop="Item_Drop">
+                                            <StackPanel x:Name="Item" Height="30" Orientation="Horizontal" Tag="{Binding}" Background="{StaticResource AlmostTransparentColor}">
+                                                <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsVisible,Mode=TwoWay}" Style="{StaticResource EyeCheckBoxStyle}" Cursor="Hand" Margin="{Binding MarginLeft,Mode=OneWay,Converter={StaticResource leftToMarginConverter}}"/>
+                                                <ToggleButton DockPanel.Dock="Left" x:Name="Expander" Visibility="Collapsed" ClickMode="Press" Focusable="True"
+                                                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                                                          Style="{StaticResource ExpanderButtonStyle}"/>
+                                                <Path x:Name="GroupIcon" Width="16" Height="30" Margin="3,0,0,0" Stretch="Uniform" Fill="Gainsboro" Visibility="Collapsed">
+                                                    <Path.Data>
+                                                        M880 298.4H521L403.7 186.2c-1.5-1.4-3.5-2.2-5.5-2.2H144c-17.7 0-32 14.3-32 32v592c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V330.4c0-17.7-14.3-32-32-32zM840 768H184V256h188.5l119.6 114.4H840V768z
+                                                    </Path.Data>
+                                                </Path>
+                                                <Border DockPanel.Dock="Left" x:Name="Thumbnail" Visibility="Collapsed" Width="28" Height="28" BorderBrush="Gainsboro" BorderThickness="1">
+                                                    <Border x:Name="Picture" RenderOptions.BitmapScalingMode="LowQuality"/>
+                                                </Border>
+                                                <TextBlock Text="{Binding LayerName,Mode=OneWay}" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" Margin="4,0,0,0"/>
+                                                <StackPanel.ContextMenu>
+                                                    <ContextMenu x:Name="ItemMenu">
+                                                        <MenuItem Header="重命名"/>
+                                                        <MenuItem Header="添加组"/>
+                                                        <MenuItem Header="添加图层"/>
+                                                        <MenuItem Header="删除"/>
+                                                        <MenuItem Header="向上移动一层" ToolTip="在同一层内向上移动一层"/>
+                                                        <MenuItem Header="向下移动一层" ToolTip="在同一层内向下移动一层"/>
+                                                    </ContextMenu>
+                                                </StackPanel.ContextMenu>
+                                            </StackPanel>
+                                        </Border>
+                                        <ItemsPresenter x:Name="ItemsHost"/>
+                                    </StackPanel>
+                                    <ControlTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding LayerType}" Value="{x:Static model:LayerTypes.Group}">
+                                            <Setter TargetName="GroupIcon" Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding LayerType}" Value="{x:Static model:LayerTypes.Picture}">
+                                            <Setter TargetName="Picture" Property="Background" Value="{Binding Thumbnail,Mode=OneWay}"/>
+                                            <Setter TargetName="Thumbnail" Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <Trigger Property="IsMouseOver" Value="True" SourceName="Item">
+                                            <Setter TargetName="Item" Property="Background" Value="#232426"/>
+                                        </Trigger>
+                                        <Trigger Property="IsOpen" Value="True" SourceName="ItemMenu">
+                                            <Setter TargetName="Item" Property="Background" Value="#232426"/>
+                                        </Trigger>
+                                        <Trigger Property="IsExpanded" Value="false">
+                                            <Setter Property="Visibility" TargetName="ItemsHost" Value="Collapsed"/>
+                                        </Trigger>
+                                        <Trigger Property="HasItems" Value="True">
+                                            <Setter Property="Visibility" TargetName="Expander" Value="Visible"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="true">
+                                            <Setter TargetName="Item" Property="Background" Value="#131416"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </TreeView.Style>
+</TreeView>
