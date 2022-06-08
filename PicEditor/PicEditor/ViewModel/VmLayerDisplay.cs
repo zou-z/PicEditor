@@ -82,5 +82,23 @@ namespace PicEditor.ViewModel
             layerManage?.SetLayerThumbnail(guid, item.GetVisualBrush());
             layerManage?.SetLayerSize(guid, bitmap.PixelWidth, bitmap.PixelHeight);
         }
+
+        public void LayerDeleted(string guid)
+        {
+            for (int i = 0; i < PictureLayers.Count; ++i)
+            {
+                if (PictureLayers[i] is PictureLayer layer && layer != null && layer.Guid == guid)
+                {
+                    PictureLayers.RemoveAt(i);
+                    return;
+                }
+            }
+            LogUtil.Log.Error(new Exception("删除图层失败"), "未找到该图层");
+        }
+
+        public void LayersChanged(List<string> layerList)
+        {
+
+        }
     }
 }

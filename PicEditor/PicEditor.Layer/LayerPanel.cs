@@ -68,11 +68,14 @@ namespace PicEditor.Layer
             HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             Content = canvas = new Canvas();
-            squareBackground = new SquareBackground();
+            squareBackground = new SquareBackground { SnapsToDevicePixels = false };
             scaleContext = new ScaleContext();
             moveContext = new MoveContext();
             SnapsToDevicePixels = true;
             Loaded += LayerPanel_Loaded;
+            Canvas.SetLeft(squareBackground, 0.5);
+            Canvas.SetTop(squareBackground, 0.5);
+            FocusVisualStyle = null;
         }
         #endregion
 
@@ -302,13 +305,12 @@ namespace PicEditor.Layer
 
         private void SetCanvasSize(double width, double height)
         {
-            canvas.Width = squareBackground.Width = width;
-            canvas.Height = squareBackground.Height = height;
+            canvas.Width = width;
+            canvas.Height = height;
+            squareBackground.Width = width - 1;
+            squareBackground.Height = height - 1;
         }
         #endregion
-
-
-
 
         #endregion
 

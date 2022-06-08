@@ -17,25 +17,24 @@ namespace PicEditor.ViewModel
 {
     internal class VmLayerManage : ILayerManage
     {
+        private readonly CollectionUtil collectionUtil = new();
         private ILayerDisplay? layerDisplay = null;
         private const double unitLeft = 30;
         private int groupIndex = 0;
         private int layerIndex = 0;
-        private readonly CollectionUtil collectionUtil = new();
         private ObservableCollection<LayerBase>? layers = null;
+        public LayerPicture? selectedLayer = null;
         private RelayCommand<LayerBase>? addLayerGroupCommand = null;
         private RelayCommand<LayerBase>? addLayerPictureCommand = null;
-        private RelayCommand? deleteSelectedLayerCommand = null;
+        private RelayCommand<LayerBase>? deleteCommand = null;
 
         public ObservableCollection<LayerBase> Layers => layers ??= new ObservableCollection<LayerBase>();
-
-        public LayerBase? SelectedLayer { get; set; }
 
         public RelayCommand<LayerBase> AddLayerGroupCommand => addLayerGroupCommand ??= new RelayCommand<LayerBase>(AddLayerGroup);
 
         public RelayCommand<LayerBase> AddLayerPictureCommand => addLayerPictureCommand ??= new RelayCommand<LayerBase>(AddLayer);
 
-        public RelayCommand DeleteSelectedLayerCommand => deleteSelectedLayerCommand ??= new RelayCommand(DeleteSelectedLayer);
+        public RelayCommand<LayerBase> DeleteCommand => deleteCommand ??= new RelayCommand<LayerBase>(Delete);
 
         public VmLayerManage()
         {
@@ -131,22 +130,23 @@ namespace PicEditor.ViewModel
         #region 图层选中回调
         private void SelectedChanged(LayerPicture picture)
         {
-            if (!picture.Equals(SelectedLayer) && SelectedLayer != null && SelectedLayer is LayerPicture _picture && _picture != null)
+            if (!picture.Equals(selectedLayer) && selectedLayer != null && selectedLayer is LayerPicture _picture && _picture != null)
             {
                 _picture.SetIsSelected(false);
             }
-            SelectedLayer = picture;
+            selectedLayer = picture;
         }
 
         private void LayerGroupSelected()
         {
-            if (SelectedLayer != null && SelectedLayer is LayerPicture picture && picture != null)
+            if (selectedLayer != null && selectedLayer is LayerPicture picture && picture != null)
             {
                 picture.SetIsSelected(true);
             }
         }
         #endregion
 
+        #region 添加图层
         public void AddLayer(string guid, VisualBrush? brush)
         {
             var picture = new LayerPicture
@@ -204,29 +204,9 @@ namespace PicEditor.ViewModel
             layerDisplay?.LayerAdded(picture.Guid, previousGuid);
             //layerDisplay?.LayerIndexChanged();
         }
+        #endregion
 
-        public void SetLayerSize(string guid, int width, int height)
-        {
-            LayerPicture? picture = collectionUtil.FindLayerPicture(Layers, guid);
-            if (picture == null)
-            {
-                LogUtil.Log.Error(new Exception("设置图层缩略图高度失败"), "picture为空");
-                return;
-            }
-            picture.ThumbnailHeight = picture.ThumbnailWidth * height / width;
-        }
-
-        public void SetLayerThumbnail(string guid, VisualBrush brush)
-        {
-            LayerPicture? picture = collectionUtil.FindLayerPicture(Layers, guid);
-            if (picture == null)
-            {
-                LogUtil.Log.Error(new Exception("设置图层缩略图失败"), "picture为空");
-                return;
-            }
-            picture.Thumbnail = brush;
-        }
-
+        #region 添加组
         private void AddLayerGroup(LayerBase? layerBase)
         {
             var group = new LayerGroup
@@ -261,7 +241,9 @@ namespace PicEditor.ViewModel
                 collection.Insert(collection.IndexOf(layerPicture), group);
             }
         }
+        #endregion
 
+        #region 图层和组Visible
         private void IsVisibleChanged(LayerBase layerBase)
         {
             if (!collectionUtil.IsGroupVisible(Layers, layerBase))
@@ -292,35 +274,98 @@ namespace PicEditor.ViewModel
                 }
             }
         }
+        #endregion
 
-
-
-
-
-
-
-
-        private void DeleteSelectedLayer()
+        #region 图层缩略图
+        public void SetLayerSize(string guid, int width, int height)
         {
-            if (SelectedLayer == null)
+            LayerPicture? picture = collectionUtil.FindLayerPicture(Layers, guid);
+            if (picture == null)
             {
-                MessageBox.Show("当前未选择任何图层");
+                LogUtil.Log.Error(new Exception("设置图层缩略图高度失败"), "picture为空");
                 return;
             }
-            if (SelectedLayer is LayerPicture picture)
-            {
-                picture.SelectedChanged -= SelectedChanged;
-                picture.IsVisibleChanged -= IsVisibleChanged;
-            }
-            DeleteLayer(SelectedLayer);
-            SelectedLayer = null;
+            picture.ThumbnailHeight = picture.ThumbnailWidth * height / width;
         }
 
-        private void DeleteLayer(LayerBase layer)
+        public void SetLayerThumbnail(string guid, VisualBrush brush)
         {
-            ObservableCollection<LayerBase>? collection = collectionUtil.FindCollection(Layers, layer);
-            collection?.Remove(layer);
+            LayerPicture? picture = collectionUtil.FindLayerPicture(Layers, guid);
+            if (picture == null)
+            {
+                LogUtil.Log.Error(new Exception("设置图层缩略图失败"), "picture为空");
+                return;
+            }
+            picture.Thumbnail = brush;
         }
+        #endregion
+
+        #region 删除图层、组
+        private void Delete(LayerBase? layerBase)
+        {
+            if (layerBase == null)
+            {
+                if (selectedLayer == null)
+                {
+                    MessageBox.Show("当前未选择任何图层");
+                    return;
+                }
+                layerBase = selectedLayer;
+            }
+            ObservableCollection<LayerBase>? collection = collectionUtil.FindCollection(Layers, layerBase);
+            if (collection == null)
+            {
+                LogUtil.Log.Error(new Exception($"删除{(layerBase is LayerPicture ? "图层" : "组")}失败"), "collection为空");
+                return;
+            }
+            if (layerBase is LayerPicture picture)
+            {
+                if (picture.Equals(selectedLayer))
+                {
+                    selectedLayer = null;
+                }
+                DeleteLayer(collection, picture);
+            }
+            else if (layerBase is LayerGroup group)
+            {
+                if (selectedLayer != null && collectionUtil.GroupContainers(group.Children, selectedLayer))
+                {
+                    selectedLayer = null;
+                }
+                DeleteGroup(group.Children);
+                group.LayerGroupSelected -= LayerGroupSelected;
+                group.IsVisibleChanged -= IsVisibleChanged;
+                collection.Remove(group);
+            }
+        }
+
+        private void DeleteLayer(ObservableCollection<LayerBase> collection, LayerPicture picture)
+        {
+            picture.SelectedChanged -= SelectedChanged;
+            picture.IsVisibleChanged -= IsVisibleChanged;
+            collection.Remove(picture);
+            layerDisplay?.LayerDeleted(picture.Guid);
+        }
+
+        private void DeleteGroup(ObservableCollection<LayerBase> collection)
+        {
+            for (int i = collection.Count - 1; i >= 0; --i)
+            {
+                if (collection[i] is LayerPicture picture && picture != null)
+                {
+                    DeleteLayer(collection, picture);
+                }
+                else if (collection[i] is LayerGroup group && group != null)
+                {
+                    DeleteGroup(group.Children);
+                    group.LayerGroupSelected -= LayerGroupSelected;
+                    group.IsVisibleChanged -= IsVisibleChanged;
+                    collection.Remove(group);
+                }
+            }
+        }
+        #endregion
+
 
 
 
@@ -451,6 +496,26 @@ namespace PicEditor.ViewModel
                         return false;
                     }
                 }
+            }
+
+            // 获取该组下是否含有该图层
+            public bool GroupContainers(ObservableCollection<LayerBase> collection, LayerPicture layerPicture)
+            {
+                for (int i = 0; i < collection.Count; ++i)
+                {
+                    if (collection[i] is LayerPicture picture && picture != null && picture.Equals(layerPicture))
+                    {
+                        return true;
+                    }
+                    else if (collection[i] is LayerGroup group && group != null)
+                    {
+                        if (GroupContainers(group.Children, layerPicture))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
             }
 
             // 找出图层或组所在的组

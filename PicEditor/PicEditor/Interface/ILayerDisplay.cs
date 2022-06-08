@@ -11,16 +11,14 @@ namespace PicEditor.Interface
     {
         // 添加图层
         void LayerAdded(string guid, string? previousGuid);
-        
+
         // 删除图层
-        // void LayerDeleted(string guid);
-        
+        void LayerDeleted(string guid);
+
         // 更改图层（排列顺序改变）
-        // void LayerIndexChanged(List<guid> layerList);
+        void LayersChanged(List<string> layerList);
 
         // 图层或组是否可见改变
         void SetLayerVisible(string guid, Visibility visibility);
-
-
     }
 }
