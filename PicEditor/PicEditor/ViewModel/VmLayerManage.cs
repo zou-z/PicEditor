@@ -19,9 +19,12 @@ namespace PicEditor.ViewModel
     {
         private ILayerDisplay? layerDisplay = null;
         private const double unitLeft = 30;
+        private int groupIndex = 0;
+        private int layerIndex = 0;
+        private readonly CollectionUtil collectionUtil = new();
         private ObservableCollection<LayerBase>? layers = null;
         private RelayCommand? addLayerGroupCommand = null;
-        private RelayCommand? addLayerPictureCommand = null;
+        private RelayCommand<LayerBase>? addLayerPictureCommand = null;
         private RelayCommand? deleteSelectedLayerCommand = null;
 
         public ObservableCollection<LayerBase> Layers => layers ??= new ObservableCollection<LayerBase>();
@@ -30,13 +33,12 @@ namespace PicEditor.ViewModel
 
         public RelayCommand AddLayerGroupCommand => addLayerGroupCommand ??= new RelayCommand(AddLayerGroup);
 
-        public RelayCommand AddLayerPictureCommand => addLayerPictureCommand ??= new RelayCommand(AddLayerPicture);
+        public RelayCommand<LayerBase> AddLayerPictureCommand => addLayerPictureCommand ??= new RelayCommand<LayerBase>(AddLayer);
 
         public RelayCommand DeleteSelectedLayerCommand => deleteSelectedLayerCommand ??= new RelayCommand(DeleteSelectedLayer);
 
         public VmLayerManage()
         {
-
         }
 
         public void Initialize(ILayerDisplay layerDisplay)
@@ -47,8 +49,8 @@ namespace PicEditor.ViewModel
         #region 拖拽改变位置
         public void Relocation(LayerBase source, LayerBase target)
         {
-            ObservableCollection<LayerBase>? sourceCollection = FindCollection(Layers, source);
-            ObservableCollection<LayerBase>? targetCollection = FindCollection(Layers, target);
+            ObservableCollection<LayerBase>? sourceCollection = collectionUtil.FindCollection(Layers, source);
+            ObservableCollection<LayerBase>? targetCollection = collectionUtil.FindCollection(Layers, target);
             if (sourceCollection == null || targetCollection == null)
             {
                 LogUtil.Log.Error(new Exception("未完成拖拽"), $"{(sourceCollection == null ? "sourceCollection is null," : "")}{(targetCollection == null ? "targetCollection is null" : "")}");
@@ -74,7 +76,7 @@ namespace PicEditor.ViewModel
             }
             else if (source is LayerGroup sourceGroup)
             {
-                if (FindCollection(sourceGroup.Children, target) != null)
+                if (collectionUtil.FindCollection(sourceGroup.Children, target) != null)
                 {
                     MessageBox.Show("移动失败，不能将该组移动到其下面");
                     return;
@@ -106,7 +108,7 @@ namespace PicEditor.ViewModel
 
         public void Relocation(LayerBase source)
         {
-            ObservableCollection<LayerBase>? sourceCollection = FindCollection(Layers, source);
+            ObservableCollection<LayerBase>? sourceCollection = collectionUtil.FindCollection(Layers, source);
             if (sourceCollection == null)
             {
                 LogUtil.Log.Error(new Exception("未完成拖拽"), $"{(sourceCollection == null ? "sourceCollection is null" : "")}");
@@ -145,11 +147,78 @@ namespace PicEditor.ViewModel
         }
         #endregion
 
-        private void IsVisibleChanged(LayerBase layerBase)
+        public void AddLayer(string guid, VisualBrush? brush)
         {
-            if (layerBase is LayerPicture picture)
+            var picture = new LayerPicture
             {
-                layerDisplay?.SetLayerVisible(picture.Guid, picture.IsVisible ? Visibility.Visible : Visibility.Collapsed);
+                Guid = guid,
+                LayerName = $"图层 {++layerIndex}",
+                LayerType = LayerTypes.Picture,
+                Thumbnail = brush,
+                MarginLeft = 0,
+            };
+            picture.SelectedChanged += SelectedChanged;
+            picture.IsVisibleChanged += IsVisibleChanged;
+            Layers.Clear();
+            Layers.Add(picture);
+        }
+
+        private void AddLayer(LayerBase? layerBase)
+        {
+            string guid = GuidUtil.GetGuid();
+            var picture = new LayerPicture
+            {
+                Guid = guid,
+                LayerName = $"图层 {++layerIndex}",
+                LayerType = LayerTypes.Picture,
+                Thumbnail = null,
+                MarginLeft = 0,
+            };
+            picture.SelectedChanged += SelectedChanged;
+            picture.IsVisibleChanged += IsVisibleChanged;
+
+            string? previousGuid = null;
+            if (layerBase == null)
+            {
+                Layers.Insert(0, picture);
+            }
+            else if (layerBase is LayerGroup layerGroup)
+            {
+                layerGroup.Children.Insert(0, picture);
+                previousGuid = collectionUtil.FindPreviousGuid(Layers, guid);
+            }
+            else if (layerBase is LayerPicture layerPicture)
+            {
+                ObservableCollection<LayerBase>? collection = collectionUtil.FindCollection(Layers, layerPicture);
+                if (collection == null)
+                {
+                    LogUtil.Log.Error(new Exception("collection为空"), "AddLayer未找到collection");
+                    picture.SelectedChanged -= SelectedChanged;
+                    picture.IsVisibleChanged -= IsVisibleChanged;
+                    return;
+                }
+                collection.Insert(collection.IndexOf(layerPicture), picture);
+                previousGuid = collectionUtil.FindPreviousGuid(Layers, guid);
+            }
+            layerDisplay?.LayerAdded(guid, previousGuid);
+            //layerDisplay?.LayerIndexChanged();
+        }
+
+        public void SetLayerSize(string guid, int width, int height)
+        {
+            LayerPicture? picture = collectionUtil.FindLayerPicture(Layers, guid);
+            if (picture != null)
+            {
+                picture.ThumbnailHeight = picture.ThumbnailWidth * height / width;
+            }
+        }
+
+        public void SetLayerThumbnail(string guid, VisualBrush brush)
+        {
+            LayerPicture? picture = collectionUtil.FindLayerPicture(Layers, guid);
+            if (picture != null)
+            {
+                picture.Thumbnail = brush;
             }
         }
 
@@ -157,7 +226,6 @@ namespace PicEditor.ViewModel
 
 
 
-        int groupIndex = 0;
         private void AddLayerGroup()
         {
             var group = new LayerGroup
@@ -170,47 +238,14 @@ namespace PicEditor.ViewModel
             Layers.Add(group);
         }
 
-        int pictureIndex = 0;
-        private void AddLayerPicture()
-        {
-            var picture = new LayerPicture
-            {
-                LayerName = $"picture layer {++pictureIndex}",
-                LayerType = LayerTypes.Picture,
-                Thumbnail = null,
-                MarginLeft = 0,
-            };
-            picture.SelectedChanged += SelectedChanged;
-            Layers.Add(picture);
-        }
 
 
 
 
 
-        public void AddLayer(string guid, VisualBrush brush)
-        {
-            var picture = new LayerPicture
-            {
-                Guid = guid,
-                LayerName = $"picture layer {++pictureIndex}",
-                LayerType = LayerTypes.Picture,
-                Thumbnail = brush,
-                MarginLeft = 0,
-            };
-            picture.SelectedChanged += SelectedChanged;
-            picture.IsVisibleChanged += IsVisibleChanged;
-            Layers.Add(picture);
-        }
 
-        public void SetLayerSize(string guid, int width, int height)
-        {
-            LayerPicture? picture = FindLayerPicture(Layers, guid);
-            if (picture != null)
-            {
-                picture.ThumbnailHeight = picture.ThumbnailWidth * height / width;
-            }
-        }
+
+
 
         private void DeleteSelectedLayer()
         {
@@ -222,8 +257,7 @@ namespace PicEditor.ViewModel
             if (SelectedLayer is LayerPicture picture)
             {
                 picture.SelectedChanged -= SelectedChanged;
-
-
+                picture.IsVisibleChanged -= IsVisibleChanged;
             }
             DeleteLayer(SelectedLayer);
             SelectedLayer = null;
@@ -231,44 +265,99 @@ namespace PicEditor.ViewModel
 
         private void DeleteLayer(LayerBase layer)
         {
-            ObservableCollection<LayerBase>? collection = FindCollection(Layers, layer);
+            ObservableCollection<LayerBase>? collection = collectionUtil.FindCollection(Layers, layer);
             collection?.Remove(layer);
         }
 
-        private ObservableCollection<LayerBase>? FindCollection(ObservableCollection<LayerBase> collection, LayerBase source)
+
+
+
+
+
+
+
+        private void IsVisibleChanged(LayerBase layerBase)
         {
-            for (int i = 0; i < collection.Count; ++i)
+            if (layerBase is LayerPicture picture)
             {
-                if (collection[i].Equals(source))
+                layerDisplay?.SetLayerVisible(picture.Guid, picture.IsVisible ? Visibility.Visible : Visibility.Collapsed);
+            }
+        }
+
+
+        private class CollectionUtil
+        {
+            // 找出LayerBase所在的Collection
+            public ObservableCollection<LayerBase>? FindCollection(ObservableCollection<LayerBase> collection, LayerBase source)
+            {
+                for (int i = 0; i < collection.Count; ++i)
                 {
-                    return collection;
-                }
-                if (collection[i] is LayerGroup group && group != null)
-                {
-                    ObservableCollection<LayerBase>? _collection = FindCollection(group.Children, source);
-                    if (_collection != null)
+                    if (collection[i].Equals(source))
                     {
-                        return _collection;
+                        return collection;
+                    }
+                    if (collection[i] is LayerGroup group && group != null)
+                    {
+                        ObservableCollection<LayerBase>? _collection = FindCollection(group.Children, source);
+                        if (_collection != null)
+                        {
+                            return _collection;
+                        }
+                    }
+                }
+                return null;
+            }
+
+            // 通过guid找出LayerPicture
+            public LayerPicture? FindLayerPicture(ObservableCollection<LayerBase> collection, string guid)
+            {
+                for (int i = 0; i < collection.Count; ++i)
+                {
+                    if (collection[i] is LayerPicture picture && picture != null && picture.Guid == guid)
+                    {
+                        return picture;
+                    }
+                    if (collection[i] is LayerGroup group && group != null)
+                    {
+                        return FindLayerPicture(group.Children, guid);
+                    }
+                }
+                return null;
+            }
+
+            // 树状结构转列表结构
+            public void TreeToList(ObservableCollection<LayerBase> collection, ref List<string> list)
+            {
+                for (int i = 0; i < collection.Count; ++i)
+                {
+                    if (collection[i] is LayerPicture picture && picture != null)
+                    {
+                        list.Add(picture.Guid);
+                    }
+                    else if (collection[i] is LayerGroup group && group != null)
+                    {
+                        TreeToList(group.Children, ref list);
                     }
                 }
             }
-            return null;
-        }
 
-        private LayerPicture? FindLayerPicture(ObservableCollection<LayerBase> collection, string guid)
-        {
-            for (int i = 0; i < collection.Count; ++i)
+            public string? FindPreviousGuid(ObservableCollection<LayerBase> collection, string guid)
             {
-                if (collection[i] is LayerPicture picture && picture != null && picture.Guid == guid)
+                var list = new List<string>();
+                TreeToList(collection, ref list);
+                for(int i= 0; i < list.Count; ++i)
                 {
-                    return picture;
+                    if (list[i] == guid)
+                    {
+                        if (i + 1 >= list.Count)
+                        {
+                            return null;
+                        }
+                        return list[i + 1];
+                    }
                 }
-                if (collection[i] is LayerGroup group && group != null)
-                {
-                    return FindLayerPicture(group.Children, guid);
-                }
+                return null;
             }
-            return null;
         }
     }
 }

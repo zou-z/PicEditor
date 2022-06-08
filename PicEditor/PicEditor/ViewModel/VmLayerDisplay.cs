@@ -59,5 +59,28 @@ namespace PicEditor.ViewModel
                 }
             }
         }
+
+        public void LayerAdded(string guid, string? previousGuid)
+        {
+            var bitmap = FileUtil.GetTransparentBitmap((int)LayerInfo.CanvasSize.Width, (int)LayerInfo.CanvasSize.Height);
+            var item = new PictureLayer(bitmap, LayerInfo.Scale) { Guid = guid };
+            if (previousGuid == null)
+            {
+                PictureLayers.Add(item);
+            }
+            else
+            {
+                for (int i = 0; i < PictureLayers.Count; ++i)
+                {
+                    if (PictureLayers[i] is PictureLayer layer && layer != null && layer.Guid == previousGuid)
+                    {
+                        PictureLayers.Insert(i + 1, item);
+                        break;
+                    }
+                }
+            }
+            layerManage?.SetLayerThumbnail(guid, item.GetVisualBrush());
+            layerManage?.SetLayerSize(guid, bitmap.PixelWidth, bitmap.PixelHeight);
+        }
     }
 }

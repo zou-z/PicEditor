@@ -10,11 +10,14 @@ namespace PicEditor.Interface
     internal interface ILayerDisplay
     {
         // 添加图层
-        // void LayerAdded(string guid);
+        void LayerAdded(string guid, string? previousGuid);
+        
         // 删除图层
         // void LayerDeleted(string guid);
+        
         // 更改图层（排列顺序改变）
-        // void LayersChanged(List<guid> layerList);
+        // void LayerIndexChanged(List<guid> layerList);
+
         // 图层或组是否可见改变
         void SetLayerVisible(string guid, Visibility visibility);
 

@@ -15,20 +15,13 @@ namespace PicEditor.View.Control
     {
         public string Guid { get; set; } = string.Empty;
 
-        public PictureLayer(WriteableBitmap wb)
+        public PictureLayer(WriteableBitmap bitmap, double scale = 1)
         {
-            Width = wb.PixelWidth;
-            Height = wb.PixelHeight;
-            image = new Image
-            {
-                Source = wb,
-                Width = Width,
-                Height = Height,
-            };
+            image = new Image { Source = bitmap };
             Children.Add(image);
             Background = Brushes.Transparent;
-            RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
             EditingMode = InkCanvasEditingMode.None;
+            SetSize(bitmap.PixelWidth * scale, bitmap.PixelHeight * scale, scale);
         }
 
         public void SetSize(double width, double height, double scale)

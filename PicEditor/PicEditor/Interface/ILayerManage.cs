@@ -12,7 +12,7 @@ namespace PicEditor.Interface
     {
         void AddLayer(string guid, VisualBrush brush);
 
-        // void SetLayerThumbnail(VisualBrush brush);
+        void SetLayerThumbnail(string guid, VisualBrush brush);
 
         void SetLayerSize(string guid, int width, int height);
     }

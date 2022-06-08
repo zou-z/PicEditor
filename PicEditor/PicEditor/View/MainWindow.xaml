@@ -43,11 +43,11 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <control:TreeViewEx Grid.Row="0"/>
-                    <!--<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Width="60" Height="30" Content="新建组" Command="{Binding Source={x:Static vm:VmLocator.Layer},Path=AddLayerGroupCommand,Mode=OneTime}"/>
-                        <Button Width="60" Height="30" Content="新建图层" Command="{Binding Source={x:Static vm:VmLocator.Layer},Path=AddLayerPictureCommand,Mode=OneTime}"/>
-                        <Button Width="60" Height="30" Content="删除图层" Command="{Binding Source={x:Static vm:VmLocator.Layer},Path=DeleteSelectedLayerCommand,Mode=OneTime}"/>
-                    </StackPanel>-->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <!--<Button Width="60" Height="30" Content="新建组" Command="{Binding Source={x:Static vm:VmLocator.Layer},Path=AddLayerGroupCommand,Mode=OneTime}"/>-->
+                        <Button Width="60" Height="30" Content="新建图层" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=AddLayerPictureCommand,Mode=OneTime}"/>
+                        <!--<Button Width="60" Height="30" Content="删除图层" Command="{Binding Source={x:Static vm:VmLocator.Layer},Path=DeleteSelectedLayerCommand,Mode=OneTime}"/>-->
+                    </StackPanel>
                 </Grid>
             </Grid>
 

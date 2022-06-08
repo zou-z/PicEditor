@@ -134,7 +134,7 @@
                                                     </Path.Data>
                                                 </Path>
                                                 <Border DockPanel.Dock="Left" x:Name="Thumbnail" Visibility="Collapsed" Width="{Binding ThumbnailWidth,Mode=OneTime}" Height="{Binding ThumbnailWidth,Mode=OneTime}" BorderBrush="Gainsboro" BorderThickness="1">
-                                                    <Border x:Name="Picture" Height="{Binding ThumbnailHeight,Mode=OneWay}" RenderOptions.BitmapScalingMode="LowQuality"/>
+                                                    <Border x:Name="Picture" Height="{Binding ThumbnailHeight,Mode=OneWay}" RenderOptions.BitmapScalingMode="LowQuality" SnapsToDevicePixels="False"/>
                                                 </Border>
                                                 <TextBlock Text="{Binding LayerName,Mode=OneWay}" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" Margin="4,0,0,0"/>
                                                 <StackPanel.ContextMenu>
