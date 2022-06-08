@@ -262,7 +262,36 @@ namespace PicEditor.ViewModel
             }
         }
 
+        private void IsVisibleChanged(LayerBase layerBase)
+        {
+            if (!collectionUtil.IsGroupVisible(Layers, layerBase))
+            {
+                return;
+            }
+            if (layerBase is LayerPicture picture)
+            {
+                layerDisplay?.SetLayerVisible(picture.Guid, picture.IsVisible ? Visibility.Visible : Visibility.Collapsed);
+            }
+            else if (layerBase is LayerGroup group)
+            {
+                UpdateAllChildVisible(group.Children, group.IsVisible);
+            }
+        }
 
+        public void UpdateAllChildVisible(ObservableCollection<LayerBase> collection, bool isVisible)
+        {
+            for (int i = 0; i < collection.Count; ++i)
+            {
+                if (collection[i] is LayerPicture picture && picture != null)
+                {
+                    layerDisplay?.SetLayerVisible(picture.Guid, isVisible && picture.IsVisible ? Visibility.Visible : Visibility.Collapsed);
+                }
+                else if (collection[i] is LayerGroup group && group != null)
+                {
+                    UpdateAllChildVisible(group.Children, isVisible && group.IsVisible);
+                }
+            }
+        }
 
 
 
@@ -300,13 +329,7 @@ namespace PicEditor.ViewModel
 
 
 
-        private void IsVisibleChanged(LayerBase layerBase)
-        {
-            if (layerBase is LayerPicture picture)
-            {
-                layerDisplay?.SetLayerVisible(picture.Guid, picture.IsVisible ? Visibility.Visible : Visibility.Collapsed);
-            }
-        }
+
 
 
         private class CollectionUtil
@@ -369,6 +392,7 @@ namespace PicEditor.ViewModel
                 }
             }
 
+            // 找出前一个图层的guid
             public string? FindPreviousGuid(ObservableCollection<LayerBase> collection, string guid)
             {
                 var list = new List<string>();
@@ -382,6 +406,69 @@ namespace PicEditor.ViewModel
                             return null;
                         }
                         return list[i + 1];
+                    }
+                }
+                return null;
+            }
+
+            // 获取该组的所有上层组是否可见
+            public bool IsGroupVisible(ObservableCollection<LayerBase> collection, LayerBase layerBase)
+            {
+                LayerGroup? _group;
+                if (layerBase is LayerPicture picture && picture != null)
+                {
+                    LayerGroup? tempGroup = FindParentGroup(collection, picture);
+                    if (tempGroup == null)
+                    {
+                        return true;
+                    }
+                    if (!tempGroup.IsVisible)
+                    {
+                        return false;
+                    }
+                    _group = tempGroup;
+                }
+                else
+                {
+                    _group = layerBase as LayerGroup;
+                }
+
+                bool result = true;
+                while (true)
+                {
+                    if (_group == null)
+                    {
+                        LogUtil.Log.Error(new Exception("获取所在的组失败"), "_group为空");
+                        return true;
+                    }
+                    _group = FindParentGroup(collection, _group);
+                    if (_group == null)
+                    {
+                        return result;
+                    }
+                    if (!_group.IsVisible)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // 找出图层或组所在的组
+            private LayerGroup? FindParentGroup(ObservableCollection<LayerBase> collection, LayerBase layerBase)
+            {
+                for (int i = 0; i < collection.Count; ++i)
+                {
+                    if (collection[i] is LayerGroup layerGroup && layerGroup != null)
+                    {
+                        if (layerGroup.Children.Contains(layerBase))
+                        {
+                            return layerGroup;
+                        }
+                        LayerGroup? _group = FindParentGroup(layerGroup.Children, layerBase);
+                        if (_group != null)
+                        {
+                            return _group;
+                        }
                     }
                 }
                 return null;
