@@ -27,6 +27,8 @@ namespace PicEditor.ViewModel
         private RelayCommand<LayerBase>? addLayerGroupCommand = null;
         private RelayCommand<LayerBase>? addLayerPictureCommand = null;
         private RelayCommand<LayerBase>? deleteCommand = null;
+        private RelayCommand<LayerBase>? moveUpCommand = null;
+        private RelayCommand<LayerBase>? moveDownCommand = null;
 
         public ObservableCollection<LayerBase> Layers => layers ??= new ObservableCollection<LayerBase>();
 
@@ -35,6 +37,10 @@ namespace PicEditor.ViewModel
         public RelayCommand<LayerBase> AddLayerPictureCommand => addLayerPictureCommand ??= new RelayCommand<LayerBase>(AddLayer);
 
         public RelayCommand<LayerBase> DeleteCommand => deleteCommand ??= new RelayCommand<LayerBase>(Delete);
+
+        public RelayCommand<LayerBase> MoveUpCommand => moveUpCommand ??= new RelayCommand<LayerBase>(MoveUp);
+
+        public RelayCommand<LayerBase> MoveDownCommand => moveDownCommand ??= new RelayCommand<LayerBase>(MoveDown);
 
         public VmLayerManage()
         {
@@ -366,7 +372,39 @@ namespace PicEditor.ViewModel
         }
         #endregion
 
+        #region 图层、组的同层移动
+        private void MoveUp(LayerBase? layerBase)
+        {
+            Move(layerBase, true);
+        }
 
+        private void MoveDown(LayerBase? layerBase)
+        {
+            Move(layerBase, false);
+        }
+
+        private void Move(LayerBase? layerBase, bool isMoveUp)
+        {
+            if (layerBase != null)
+            {
+                ObservableCollection<LayerBase>? collection = collectionUtil.FindCollection(Layers, layerBase);
+                if (collection != null)
+                {
+                    int index = collection.IndexOf(layerBase);
+                    if (isMoveUp && index > 0)
+                    {
+                        collection.Remove(layerBase);
+                        collection.Insert(index - 1, layerBase);
+                    }
+                    else if (!isMoveUp && index + 1 < collection.Count)
+                    {
+                        collection.Remove(layerBase);
+                        collection.Insert(index + 1, layerBase);
+                    }
+                }
+            }
+        }
+        #endregion
 
 
 

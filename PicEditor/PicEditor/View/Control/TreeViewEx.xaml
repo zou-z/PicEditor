@@ -143,8 +143,8 @@
                                                         <MenuItem Header="添加组" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=AddLayerGroupCommand,Mode=OneTime}" CommandParameter="{Binding}"/>
                                                         <MenuItem Header="添加图层" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=AddLayerPictureCommand,Mode=OneTime}" CommandParameter="{Binding}"/>
                                                         <MenuItem Header="删除" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=DeleteCommand,Mode=OneTime}" CommandParameter="{Binding}"/>
-                                                        <!--<MenuItem Header="向上移动一层" ToolTip="在同一层内向上移动一层"/>-->
-                                                        <!--<MenuItem Header="向下移动一层" ToolTip="在同一层内向下移动一层"/>-->
+                                                        <MenuItem Header="上移一层" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=MoveUpCommand,Mode=OneTime}" CommandParameter="{Binding}" ToolTip="在同一层内向上移动一层"/>
+                                                        <MenuItem Header="下移一层" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=MoveDownCommand,Mode=OneTime}" CommandParameter="{Binding}" ToolTip="在同一层内向下移动一层"/>
                                                     </ContextMenu>
                                                 </StackPanel.ContextMenu>
                                             </StackPanel>

@@ -15,7 +15,7 @@ namespace PicEditor.Interface
         // 删除图层
         void LayerDeleted(string guid);
 
-        // 更改图层（排列顺序改变）
+        // 更改图层（拖拽、上下移动）
         void LayersChanged(List<string> layerList);
 
         // 图层或组是否可见改变
