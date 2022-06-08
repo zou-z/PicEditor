@@ -7,8 +7,8 @@ using System.Windows.Media.Imaging;
 
 namespace PicEditor.Interface
 {
-    internal interface IEdit
+    internal interface IPictureSource
     {
-        void SetPicture(WriteableBitmap writeableBitmap);
+        void SetPictureSource(WriteableBitmap bitmap);
     }
 }

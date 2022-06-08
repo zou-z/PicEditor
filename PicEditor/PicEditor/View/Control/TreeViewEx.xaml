@@ -8,7 +8,7 @@
           xmlns:vm="clr-namespace:PicEditor.ViewModel"
           xmlns:model="clr-namespace:PicEditor.Model.Layer"
           Padding="0,0,0,50"
-          DataContext="{x:Static vm:VmLocator.Layer}"
+          DataContext="{x:Static vm:VmLocator.LayerManage}"
           ItemsSource="{Binding Layers,Mode=OneWay}">
     <TreeView.Resources>
         <SolidColorBrush x:Key="AlmostTransparentColor"/>

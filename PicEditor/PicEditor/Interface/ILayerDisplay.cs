@@ -19,6 +19,5 @@ namespace PicEditor.Interface
         void SetLayerVisible(string guid, Visibility visibility);
 
 
-
     }
 }

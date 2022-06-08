@@ -7,7 +7,6 @@
         xmlns:view="clr-namespace:PicEditor.View"
         xmlns:vm="clr-namespace:PicEditor.ViewModel"
         xmlns:layer="clr-namespace:PicEditor.Layer;assembly=PicEditor.Layer"
-        xmlns:basicControl="clr-namespace:PicEditor.Basic.Control;assembly=PicEditor.Basic"
         xmlns:control="clr-namespace:PicEditor.View.Control"
         SnapsToDevicePixels="True"
         Title="MainWindow" Height="550" Width="800">
@@ -35,8 +34,8 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Row="0">
-                    <basicControl:ScaleSlider Width="150" Scale="{Binding Source={x:Static vm:VmLocator.Edit},Path=EditArea.Scale,Mode=TwoWay}"/>
-                    <TextBlock Text="{Binding Source={x:Static vm:VmLocator.Edit},Path=EditArea.Scale,Mode=OneWay,StringFormat={}{0:F2}}"/>
+                    <control:ScaleSlider Width="150" Scale="{Binding Source={x:Static vm:VmLocator.LayerDisplay},Path=LayerInfo.Scale,Mode=TwoWay}"/>
+                    <TextBlock Text="{Binding Source={x:Static vm:VmLocator.LayerDisplay},Path=LayerInfo.Scale,Mode=OneWay,StringFormat={}{0:F2}}"/>
                 </StackPanel>
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
@@ -44,20 +43,20 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <control:TreeViewEx Grid.Row="0"/>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <!--<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Width="60" Height="30" Content="新建组" Command="{Binding Source={x:Static vm:VmLocator.Layer},Path=AddLayerGroupCommand,Mode=OneTime}"/>
                         <Button Width="60" Height="30" Content="新建图层" Command="{Binding Source={x:Static vm:VmLocator.Layer},Path=AddLayerPictureCommand,Mode=OneTime}"/>
                         <Button Width="60" Height="30" Content="删除图层" Command="{Binding Source={x:Static vm:VmLocator.Layer},Path=DeleteSelectedLayerCommand,Mode=OneTime}"/>
-                    </StackPanel>
+                    </StackPanel>-->
                 </Grid>
             </Grid>
 
             <layer:LayerPanel CanvasMargin="100"
                               IsCanvasMoveEnabled="{Binding Source={x:Static vm:VmLocator.EditMode},Path=EditMode.IsCanvasMoveEnabled,Mode=OneWay}"
-                              Scale="{Binding Source={x:Static vm:VmLocator.Edit},Path=EditArea.Scale,Mode=TwoWay}"
-                              Layers="{Binding Source={x:Static vm:VmLocator.Edit},Path=Layers.PictureLayers,Mode=OneWay}"
-                              UpperLayers="{Binding Source={x:Static vm:VmLocator.Edit},Path=Layers.UpperLayers,Mode=OneWay}"
-                              CanvasSize="{Binding Source={x:Static vm:VmLocator.Edit},Path=Layers.CanvasSize,Mode=OneWay}"/>
+                              Scale="{Binding Source={x:Static vm:VmLocator.LayerDisplay},Path=LayerInfo.Scale,Mode=TwoWay}"
+                              Layers="{Binding Source={x:Static vm:VmLocator.LayerDisplay},Path=PictureLayers,Mode=OneWay}"
+                              UpperLayers="{Binding Source={x:Static vm:VmLocator.LayerDisplay},Path=UpperLayers,Mode=OneWay}"
+                              CanvasSize="{Binding Source={x:Static vm:VmLocator.LayerDisplay},Path=LayerInfo.CanvasSize,Mode=OneWay}"/>
         </DockPanel>
     </DockPanel>
 </Window>

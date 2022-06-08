@@ -16,14 +16,14 @@ namespace PicEditor.ViewModel
 {
     internal class VmFile
     {
-        private IEdit? edit = null;
+        private IPictureSource? pictureSource = null;
         private RelayCommand? openFileCommand = null; // openLink,openClipboard, drag in
 
         public RelayCommand OpenFileCommand => openFileCommand ??= new RelayCommand(OpenFile);
 
-        public void Initialize(IEdit edit)
+        public void Initialize(IPictureSource? pictureSource)
         {
-            this.edit = edit;
+            this.pictureSource = pictureSource;
         }
 
         private void OpenFile()
@@ -42,7 +42,7 @@ namespace PicEditor.ViewModel
                 else
                 {
                     var image = Basic.Util.FileUtil.ReadLocalFile(dialog.FileName);
-                    edit?.SetPicture(image);
+                    pictureSource?.SetPictureSource(image);
 
                 }
             }

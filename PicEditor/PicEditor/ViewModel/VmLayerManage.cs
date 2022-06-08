@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 
 namespace PicEditor.ViewModel
 {
-    internal class VmLayer : ILayerManage
+    internal class VmLayerManage : ILayerManage
     {
         private ILayerDisplay? layerDisplay = null;
         private const double unitLeft = 30;
@@ -34,7 +34,7 @@ namespace PicEditor.ViewModel
 
         public RelayCommand DeleteSelectedLayerCommand => deleteSelectedLayerCommand ??= new RelayCommand(DeleteSelectedLayer);
 
-        public VmLayer()
+        public VmLayerManage()
         {
 
         }

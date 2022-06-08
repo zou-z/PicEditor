@@ -2,28 +2,28 @@
 {
     internal static class VmLocator
     {
-        private static readonly VmEdit vmEdit;
         private static readonly VmFile vmFile;
         private static readonly VmEditMode vmEditMode;
-        private static readonly VmLayer vmLayer;
-
-        public static VmEdit Edit => vmEdit;
+        private static readonly VmLayerDisplay vmLayerDisplay;
+        private static readonly VmLayerManage vmLayerManage;
 
         public static VmFile File => vmFile;
 
         public static VmEditMode EditMode => vmEditMode;
 
-        public static VmLayer Layer => vmLayer;
+        public static VmLayerDisplay LayerDisplay => vmLayerDisplay;
+
+        public static VmLayerManage LayerManage => vmLayerManage;
 
         static VmLocator()
         {
-            vmEdit = new VmEdit();
             vmFile = new VmFile();
             vmEditMode = new VmEditMode();
-            vmLayer=new VmLayer();
-            vmFile.Initialize(vmEdit);
-            vmEdit.Initialize(vmLayer);
-            vmLayer.Initialize(vmEdit);
+            vmLayerDisplay = new VmLayerDisplay();
+            vmLayerManage = new VmLayerManage();
+            vmFile.Initialize(vmLayerDisplay);
+            vmLayerDisplay.Initialize(vmLayerManage);
+            vmLayerManage.Initialize(vmLayerDisplay);
         }
     }
 }

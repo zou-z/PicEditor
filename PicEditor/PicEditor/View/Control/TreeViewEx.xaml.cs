@@ -61,7 +61,7 @@ namespace PicEditor.View.Control
                     // 处理拖拽结果
                     if (effects == DragDropEffects.Move)
                     {
-                        if (DataContext is VmLayer vmLayer && vmLayer != null)
+                        if (DataContext is VmLayerManage vmLayer && vmLayer != null)
                         {
                             if (dragToTopmost && source != null)
                             {
