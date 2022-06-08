@@ -23,7 +23,7 @@ namespace PicEditor.ViewModel
         private int layerIndex = 0;
         private readonly CollectionUtil collectionUtil = new();
         private ObservableCollection<LayerBase>? layers = null;
-        private RelayCommand? addLayerGroupCommand = null;
+        private RelayCommand<LayerBase>? addLayerGroupCommand = null;
         private RelayCommand<LayerBase>? addLayerPictureCommand = null;
         private RelayCommand? deleteSelectedLayerCommand = null;
 
@@ -31,7 +31,7 @@ namespace PicEditor.ViewModel
 
         public LayerBase? SelectedLayer { get; set; }
 
-        public RelayCommand AddLayerGroupCommand => addLayerGroupCommand ??= new RelayCommand(AddLayerGroup);
+        public RelayCommand<LayerBase> AddLayerGroupCommand => addLayerGroupCommand ??= new RelayCommand<LayerBase>(AddLayerGroup);
 
         public RelayCommand<LayerBase> AddLayerPictureCommand => addLayerPictureCommand ??= new RelayCommand<LayerBase>(AddLayer);
 
@@ -165,10 +165,9 @@ namespace PicEditor.ViewModel
 
         private void AddLayer(LayerBase? layerBase)
         {
-            string guid = GuidUtil.GetGuid();
             var picture = new LayerPicture
             {
-                Guid = guid,
+                Guid = GuidUtil.GetGuid(),
                 LayerName = $"图层 {++layerIndex}",
                 LayerType = LayerTypes.Picture,
                 Thumbnail = null,
@@ -184,58 +183,83 @@ namespace PicEditor.ViewModel
             }
             else if (layerBase is LayerGroup layerGroup)
             {
+                picture.MarginLeft = layerGroup.MarginLeft + unitLeft;
                 layerGroup.Children.Insert(0, picture);
-                previousGuid = collectionUtil.FindPreviousGuid(Layers, guid);
+                previousGuid = collectionUtil.FindPreviousGuid(Layers, picture.Guid);
             }
             else if (layerBase is LayerPicture layerPicture)
             {
                 ObservableCollection<LayerBase>? collection = collectionUtil.FindCollection(Layers, layerPicture);
                 if (collection == null)
                 {
-                    LogUtil.Log.Error(new Exception("collection为空"), "AddLayer未找到collection");
+                    LogUtil.Log.Error(new Exception("添加图层失败"), "AddLayer未找到collection");
                     picture.SelectedChanged -= SelectedChanged;
                     picture.IsVisibleChanged -= IsVisibleChanged;
                     return;
                 }
+                picture.MarginLeft = layerPicture.MarginLeft;
                 collection.Insert(collection.IndexOf(layerPicture), picture);
-                previousGuid = collectionUtil.FindPreviousGuid(Layers, guid);
+                previousGuid = collectionUtil.FindPreviousGuid(Layers, picture.Guid);
             }
-            layerDisplay?.LayerAdded(guid, previousGuid);
+            layerDisplay?.LayerAdded(picture.Guid, previousGuid);
             //layerDisplay?.LayerIndexChanged();
         }
 
         public void SetLayerSize(string guid, int width, int height)
         {
             LayerPicture? picture = collectionUtil.FindLayerPicture(Layers, guid);
-            if (picture != null)
+            if (picture == null)
             {
-                picture.ThumbnailHeight = picture.ThumbnailWidth * height / width;
+                LogUtil.Log.Error(new Exception("设置图层缩略图高度失败"), "picture为空");
+                return;
             }
+            picture.ThumbnailHeight = picture.ThumbnailWidth * height / width;
         }
 
         public void SetLayerThumbnail(string guid, VisualBrush brush)
         {
             LayerPicture? picture = collectionUtil.FindLayerPicture(Layers, guid);
-            if (picture != null)
+            if (picture == null)
             {
-                picture.Thumbnail = brush;
+                LogUtil.Log.Error(new Exception("设置图层缩略图失败"), "picture为空");
+                return;
             }
+            picture.Thumbnail = brush;
         }
 
-
-
-
-
-        private void AddLayerGroup()
+        private void AddLayerGroup(LayerBase? layerBase)
         {
             var group = new LayerGroup
             {
-                LayerName = $"Group {++groupIndex}",
+                LayerName = $"组 {++groupIndex}",
                 LayerType = LayerTypes.Group,
                 MarginLeft = 0,
             };
             group.LayerGroupSelected += LayerGroupSelected;
-            Layers.Add(group);
+            group.IsVisibleChanged += IsVisibleChanged;
+
+            if (layerBase == null)
+            {
+                Layers.Insert(0, group);
+            }
+            else if (layerBase is LayerGroup layerGroup)
+            {
+                group.MarginLeft = layerGroup.MarginLeft + unitLeft;
+                layerGroup.Children.Insert(0, group);
+            }
+            else if (layerBase is LayerPicture layerPicture)
+            {
+                ObservableCollection<LayerBase>? collection = collectionUtil.FindCollection(Layers, layerPicture);
+                if (collection == null)
+                {
+                    LogUtil.Log.Error(new Exception("添加组失败"), "AddLayer未找到collection");
+                    group.LayerGroupSelected -= LayerGroupSelected;
+                    group.IsVisibleChanged -= IsVisibleChanged;
+                    return;
+                }
+                group.MarginLeft = layerPicture.MarginLeft;
+                collection.Insert(collection.IndexOf(layerPicture), group);
+            }
         }
 
 
@@ -317,9 +341,13 @@ namespace PicEditor.ViewModel
                     {
                         return picture;
                     }
-                    if (collection[i] is LayerGroup group && group != null)
+                    else if (collection[i] is LayerGroup group && group != null)
                     {
-                        return FindLayerPicture(group.Children, guid);
+                        LayerPicture? layerPicture = FindLayerPicture(group.Children, guid);
+                        if (layerPicture != null)
+                        {
+                            return layerPicture;
+                        }
                     }
                 }
                 return null;

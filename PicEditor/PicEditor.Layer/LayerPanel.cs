@@ -140,8 +140,6 @@ namespace PicEditor.Layer
         private void ContentChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             canvas.Children.Clear();
-            squareBackground.Width = CanvasSize.Width;
-            squareBackground.Height = CanvasSize.Height;
             canvas.Children.Add(squareBackground);
             if (Layers != null)
             {
