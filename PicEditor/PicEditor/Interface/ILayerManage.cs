@@ -10,11 +10,10 @@ namespace PicEditor.Interface
 {
     internal interface ILayerManage
     {
-        // 打开图片
-        // 添加图片
+        void AddLayer(string guid, VisualBrush brush);
 
-        void AddLayerPicture(VisualBrush brush, string guid);
+        // void SetLayerThumbnail(VisualBrush brush);
 
-
+        void SetLayerSize(string guid, int width, int height);
     }
 }

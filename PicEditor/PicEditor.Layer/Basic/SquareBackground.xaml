@@ -1,0 +1,19 @@
+﻿<Border x:Class="PicEditor.Layer.Basic.SquareBackground"
+        x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:PicEditor.Layer.Basic"
+        SnapsToDevicePixels="True"
+        mc:Ignorable="d" d:DesignHeight="100" d:DesignWidth="100">
+    <Border.Background>
+        <VisualBrush TileMode="Tile" Viewport="0,0,18,18" ViewportUnits="Absolute" Stretch="None">
+            <VisualBrush.Visual>
+                <Canvas Width="18" Height="18" Background="White" SnapsToDevicePixels="True">
+                    <Path Data="M0,0 L0,9 9,9 9,0Z M9,9 L18,9 18,18 9,18Z" Fill="Gray" SnapsToDevicePixels="True"/>
+                </Canvas>
+            </VisualBrush.Visual>
+        </VisualBrush>
+    </Border.Background>
+</Border>

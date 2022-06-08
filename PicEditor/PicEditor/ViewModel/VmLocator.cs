@@ -23,6 +23,7 @@
             vmLayer=new VmLayer();
             vmFile.Initialize(vmEdit);
             vmEdit.Initialize(vmLayer);
+            vmLayer.Initialize(vmEdit);
         }
     }
 }

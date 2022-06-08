@@ -6,6 +6,8 @@ namespace PicEditor.Model.Layer
     internal class LayerPicture : LayerBase
     {
         private Brush? thumbnail = null;
+        private readonly double thumbnailWidth = 28;
+        private double thumbnailHeight = 28;
         private bool isSelected = false;
 
         public event Action<LayerPicture>? SelectedChanged = null;
@@ -16,6 +18,14 @@ namespace PicEditor.Model.Layer
         {
             get => thumbnail;
             set => SetProperty(ref thumbnail, value);
+        }
+
+        public double ThumbnailWidth => thumbnailWidth;
+
+        public double ThumbnailHeight
+        {
+            get => thumbnailHeight;
+            set => SetProperty(ref thumbnailHeight, value);
         }
 
         public bool IsSelected

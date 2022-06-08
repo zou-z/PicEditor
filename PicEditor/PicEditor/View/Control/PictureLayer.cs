@@ -1,6 +1,5 @@
 ﻿using PicEditor.Layer;
 using PicEditor.Model;
-using PicEditor.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,23 +7,28 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace PicEditor.View.Control
 {
     internal class PictureLayer : InkCanvas, ILayer
     {
-        public PictureLayer(ImageData imageData)
+        public string Guid { get; set; } = string.Empty;
+
+        public PictureLayer(WriteableBitmap wb)
         {
-            Width = imageData.Width;
-            Height = imageData.Height;
+            Width = wb.PixelWidth;
+            Height = wb.PixelHeight;
             image = new Image
             {
-                Source = FileUtil.ImageDataToImageSource(imageData),
+                Source = wb,
                 Width = Width,
                 Height = Height,
             };
             Children.Add(image);
+            Background = Brushes.Transparent;
             RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
+            EditingMode = InkCanvasEditingMode.None;
         }
 
         public void SetSize(double width, double height, double scale)
@@ -43,7 +47,6 @@ namespace PicEditor.View.Control
             return brush;
         }
 
-        public string Guid { get; set; }
         private readonly Image image;
     }
 }

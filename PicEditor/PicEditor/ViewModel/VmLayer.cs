@@ -17,6 +17,7 @@ namespace PicEditor.ViewModel
 {
     internal class VmLayer : ILayerManage
     {
+        private ILayerDisplay? layerDisplay = null;
         private const double unitLeft = 30;
         private ObservableCollection<LayerBase>? layers = null;
         private RelayCommand? addLayerGroupCommand = null;
@@ -38,6 +39,12 @@ namespace PicEditor.ViewModel
 
         }
 
+        public void Initialize(ILayerDisplay layerDisplay)
+        {
+            this.layerDisplay = layerDisplay;
+        }
+
+        #region 拖拽改变位置
         public void Relocation(LayerBase source, LayerBase target)
         {
             ObservableCollection<LayerBase>? sourceCollection = FindCollection(Layers, source);
@@ -117,7 +124,9 @@ namespace PicEditor.ViewModel
             }
             Layers.Add(source);
         }
+        #endregion
 
+        #region 图层选中回调
         private void SelectedChanged(LayerPicture picture)
         {
             if (!picture.Equals(SelectedLayer) && SelectedLayer != null && SelectedLayer is LayerPicture _picture && _picture != null)
@@ -134,6 +143,19 @@ namespace PicEditor.ViewModel
                 picture.SetIsSelected(true);
             }
         }
+        #endregion
+
+        private void IsVisibleChanged(LayerBase layerBase)
+        {
+            if (layerBase is LayerPicture picture)
+            {
+                layerDisplay?.SetLayerVisible(picture.Guid, picture.IsVisible ? Visibility.Visible : Visibility.Collapsed);
+            }
+        }
+
+
+
+
 
         int groupIndex = 0;
         private void AddLayerGroup()
@@ -162,7 +184,11 @@ namespace PicEditor.ViewModel
             Layers.Add(picture);
         }
 
-        public void AddLayerPicture(VisualBrush brush, string guid)
+
+
+
+
+        public void AddLayer(string guid, VisualBrush brush)
         {
             var picture = new LayerPicture
             {
@@ -173,7 +199,17 @@ namespace PicEditor.ViewModel
                 MarginLeft = 0,
             };
             picture.SelectedChanged += SelectedChanged;
+            picture.IsVisibleChanged += IsVisibleChanged;
             Layers.Add(picture);
+        }
+
+        public void SetLayerSize(string guid, int width, int height)
+        {
+            LayerPicture? picture = FindLayerPicture(Layers, guid);
+            if (picture != null)
+            {
+                picture.ThumbnailHeight = picture.ThumbnailWidth * height / width;
+            }
         }
 
         private void DeleteSelectedLayer()
@@ -186,6 +222,8 @@ namespace PicEditor.ViewModel
             if (SelectedLayer is LayerPicture picture)
             {
                 picture.SelectedChanged -= SelectedChanged;
+
+
             }
             DeleteLayer(SelectedLayer);
             SelectedLayer = null;
@@ -212,6 +250,22 @@ namespace PicEditor.ViewModel
                     {
                         return _collection;
                     }
+                }
+            }
+            return null;
+        }
+
+        private LayerPicture? FindLayerPicture(ObservableCollection<LayerBase> collection, string guid)
+        {
+            for (int i = 0; i < collection.Count; ++i)
+            {
+                if (collection[i] is LayerPicture picture && picture != null && picture.Guid == guid)
+                {
+                    return picture;
+                }
+                if (collection[i] is LayerGroup group && group != null)
+                {
+                    return FindLayerPicture(group.Children, guid);
                 }
             }
             return null;

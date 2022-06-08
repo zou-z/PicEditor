@@ -9,6 +9,7 @@
         xmlns:layer="clr-namespace:PicEditor.Layer;assembly=PicEditor.Layer"
         xmlns:basicControl="clr-namespace:PicEditor.Basic.Control;assembly=PicEditor.Basic"
         xmlns:control="clr-namespace:PicEditor.View.Control"
+        SnapsToDevicePixels="True"
         Title="MainWindow" Height="550" Width="800">
     <DockPanel>
         <Menu DockPanel.Dock="Top" Height="30">
@@ -30,6 +31,7 @@
             <Grid DockPanel.Dock="Right" Width="200" Background="AliceBlue">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Row="0">

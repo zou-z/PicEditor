@@ -4,7 +4,6 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Win32;
 using PicEditor.Interface;
 using PicEditor.Model;
-using PicEditor.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,28 +31,19 @@ namespace PicEditor.ViewModel
             OpenFileDialog dialog = new()
             {
                 Title = "打开本地文件",
-                Multiselect = false
+                Multiselect = false,
             };
             if (dialog.ShowDialog() == true)
             {
-                byte[]? data = FileUtil.ReadFile(dialog.FileName);
-                if (data != null)
+                if (Basic.Util.FileUtil.GetFileExtendName(dialog.SafeFileName)?.ToLower() == "ppm")
                 {
-                    if (FileUtil.GetFileExtendName(dialog.SafeFileName)?.ToLower() == "ppm")
-                    {
 
+                }
+                else
+                {
+                    var image = Basic.Util.FileUtil.ReadLocalFile(dialog.FileName);
+                    edit?.SetPicture(image);
 
-
-                    }
-                    else
-                    {
-                        ImageData imageData = FileUtil.GetPixelsFromStream(data);
-                        edit?.SetPicture(imageData);
-                    }
-#pragma warning disable IDE0059 // 不需要赋值
-                    data = null;
-#pragma warning restore IDE0059 // 不需要赋值
-                    GC.Collect();
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using System;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace PicEditor.Model.Layer
 {
@@ -15,6 +16,8 @@ namespace PicEditor.Model.Layer
         private bool isVisible = true;
         private double marginLeft = 0;
 
+        public event Action<LayerBase>? IsVisibleChanged = null;
+
         public string LayerName
         {
             get => layerName;
@@ -30,7 +33,11 @@ namespace PicEditor.Model.Layer
         public bool IsVisible
         {
             get => isVisible;
-            set => SetProperty(ref isVisible, value);
+            set
+            {
+                SetProperty(ref isVisible, value);
+                IsVisibleChanged?.Invoke(this);
+            }
         }
 
         public double MarginLeft

@@ -71,6 +71,7 @@ namespace PicEditor.Layer
             squareBackground = new SquareBackground();
             scaleContext = new ScaleContext();
             moveContext = new MoveContext();
+            SnapsToDevicePixels = true;
             Loaded += LayerPanel_Loaded;
         }
         #endregion
@@ -123,8 +124,7 @@ namespace PicEditor.Layer
             if (d is LayerPanel self && self != null)
             {
                 Size size = (Size)e.NewValue;
-                self.canvas.Width = size.Width;
-                self.canvas.Height = size.Height;
+                self.SetCanvasSize(size.Width, size.Height);
             }
         }
 
@@ -140,6 +140,8 @@ namespace PicEditor.Layer
         private void ContentChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             canvas.Children.Clear();
+            squareBackground.Width = CanvasSize.Width;
+            squareBackground.Height = CanvasSize.Height;
             canvas.Children.Add(squareBackground);
             if (Layers != null)
             {
@@ -256,8 +258,7 @@ namespace PicEditor.Layer
             ScrollToVerticalOffset(top);
 
             // 计算和设置每个控件的位置和尺寸
-            canvas.Width = CanvasSize.Width * scale;
-            canvas.Height = CanvasSize.Height * scale;
+            SetCanvasSize(CanvasSize.Width * scale, CanvasSize.Height * scale);
             foreach (object? child in canvas.Children)
             {
                 if (child is ILayer layer && layer != null)
@@ -290,8 +291,7 @@ namespace PicEditor.Layer
             ScrollToVerticalOffset(top);
 
             // 计算和设置每个控件的位置和尺寸
-            canvas.Width = CanvasSize.Width * scale;
-            canvas.Height = CanvasSize.Height * scale;
+            SetCanvasSize(CanvasSize.Width * scale, CanvasSize.Height * scale);
             foreach (object? child in canvas.Children)
             {
                 if (child is ILayer layer && layer != null)
@@ -300,6 +300,12 @@ namespace PicEditor.Layer
                 }
             }
             scaleContext.Set(scale);
+        }
+
+        private void SetCanvasSize(double width, double height)
+        {
+            canvas.Width = squareBackground.Width = width;
+            canvas.Height = squareBackground.Height = height;
         }
         #endregion
 
