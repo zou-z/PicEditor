@@ -16,4 +16,8 @@
     <ProjectReference Include="..\PicEditor.Layer\PicEditor.Layer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="View\Panel\" />
+  </ItemGroup>
+
 </Project>

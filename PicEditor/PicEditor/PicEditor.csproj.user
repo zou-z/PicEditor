@@ -16,11 +16,17 @@
     <Compile Update="View\Control\TreeViewEx.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\DialogWindow\LayerRenameWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\EditModePanel.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Style\StyleConfig.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\AddPicturePanel.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -28,6 +34,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Control\TreeViewEx.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\DialogWindow\LayerRenameWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\EditModePanel.xaml">

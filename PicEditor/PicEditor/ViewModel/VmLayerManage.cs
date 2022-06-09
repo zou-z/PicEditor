@@ -2,6 +2,7 @@
 using PicEditor.Basic.Util;
 using PicEditor.Interface;
 using PicEditor.Model.Layer;
+using PicEditor.View.DialogWindow;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,6 +30,7 @@ namespace PicEditor.ViewModel
         private RelayCommand<LayerBase>? deleteCommand = null;
         private RelayCommand<LayerBase>? moveUpCommand = null;
         private RelayCommand<LayerBase>? moveDownCommand = null;
+        private RelayCommand<LayerBase>? renameCommand = null;
 
         public ObservableCollection<LayerBase> Layers => layers ??= new ObservableCollection<LayerBase>();
 
@@ -41,6 +43,8 @@ namespace PicEditor.ViewModel
         public RelayCommand<LayerBase> MoveUpCommand => moveUpCommand ??= new RelayCommand<LayerBase>(MoveUp);
 
         public RelayCommand<LayerBase> MoveDownCommand => moveDownCommand ??= new RelayCommand<LayerBase>(MoveDown);
+
+        public RelayCommand<LayerBase> RenameCommand => renameCommand ??= new RelayCommand<LayerBase>(Rename);
 
         public VmLayerManage()
         {
@@ -420,14 +424,19 @@ namespace PicEditor.ViewModel
         }
         #endregion
 
-
-
-
-
-
-
-
-
+        #region 修改图层、组的名称
+        private void Rename(LayerBase? layerBase)
+        {
+            if (layerBase != null)
+            {
+                var window = new LayerRenameWindow(layerBase.LayerName);
+                if (window.ShowDialog() == true)
+                {
+                    layerBase.LayerName = window.GetResult();
+                }
+            }
+        }
+        #endregion
 
         private class CollectionUtil
         {

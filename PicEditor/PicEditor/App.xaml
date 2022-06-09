@@ -8,6 +8,9 @@
         <ResourceDictionary>
             <converter:EditModeConverter x:Key="editModeConverter"/>
             <converter:LeftToMarginConverter x:Key="leftToMarginConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Style/StyleConfig.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

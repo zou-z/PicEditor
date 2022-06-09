@@ -200,7 +200,7 @@ namespace PicEditor.Layer
                 #endregion
                 moveContext.BeforeMoving(point, HorizontalOffset, VerticalOffset);
                 Mouse.Capture(this);
-                Cursor = Cursors.ScrollAll;
+                Cursor = Cursors.SizeAll;
                 isMousePressed = true;
             }
         }

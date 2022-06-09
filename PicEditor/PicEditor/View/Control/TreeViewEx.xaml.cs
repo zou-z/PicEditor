@@ -22,7 +22,7 @@ namespace PicEditor.View.Control
         public TreeViewEx()
         {
             InitializeComponent();
-            Background = thisBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#333436"));
+            Background = thisBackground = (SolidColorBrush)Application.Current.Resources["ThemeColor"];
             dragSourceBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#131416"));
             dragTargetForeground = Brushes.RoyalBlue;
             AllowDrop = true;
