@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 
 namespace PicEditor.View.Control
 {
+    // ImageEx
     internal class PictureLayer : InkCanvas, ILayer
     {
         public string Guid { get; set; } = string.Empty;
