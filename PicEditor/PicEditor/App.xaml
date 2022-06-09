@@ -6,7 +6,6 @@
              StartupUri="View/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <converter:EditModeConverter x:Key="editModeConverter"/>
             <converter:LeftToMarginConverter x:Key="leftToMarginConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Style/StyleConfig.xaml"/>

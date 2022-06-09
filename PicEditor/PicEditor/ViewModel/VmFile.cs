@@ -2,8 +2,10 @@
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Win32;
+using PicEditor.Basic.Util;
 using PicEditor.Interface;
 using PicEditor.Model;
+using PicEditor.Model.PictureInfo;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,16 +19,19 @@ namespace PicEditor.ViewModel
     internal class VmFile
     {
         private IPictureSource? pictureSource = null;
-        private RelayCommand? openFileCommand = null; // openLink,openClipboard, drag in
+        private PictureSourceInfo? pictureSourceInfo = null;
+        private RelayCommand<string>? openFileCommand = null; // openLink,openClipboard, drag in
 
-        public RelayCommand OpenFileCommand => openFileCommand ??= new RelayCommand(OpenFile);
+        public PictureSourceInfo PictureSourceInfo => pictureSourceInfo ??= new PictureSourceInfo();
+
+        public RelayCommand<string> OpenFileCommand => openFileCommand ??= new RelayCommand<string>(OpenFile);
 
         public void Initialize(IPictureSource? pictureSource)
         {
             this.pictureSource = pictureSource;
         }
 
-        private void OpenFile()
+        private void OpenFile(string? mode)
         {
             OpenFileDialog dialog = new()
             {
@@ -35,20 +40,21 @@ namespace PicEditor.ViewModel
             };
             if (dialog.ShowDialog() == true)
             {
-                if (Basic.Util.FileUtil.GetFileExtendName(dialog.SafeFileName)?.ToLower() == "ppm")
+                if (FileUtil.GetFileExtendName(dialog.SafeFileName)?.ToLower() == "ppm")
                 {
 
                 }
                 else
                 {
-                    var image = Basic.Util.FileUtil.ReadLocalFile(dialog.FileName);
-                    pictureSource?.SetPictureSource(image);
-
+                    var bitmap = FileUtil.ReadLocalFile(dialog.FileName);
+                    pictureSource?.AddPictureSource(bitmap, GetIsInit(mode));
                 }
             }
         }
 
-  
-
+        private static bool GetIsInit(string? mode)
+        {
+            return mode == "Open";
+        }
     }
 }

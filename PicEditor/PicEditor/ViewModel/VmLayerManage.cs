@@ -171,7 +171,7 @@ namespace PicEditor.ViewModel
         #endregion
 
         #region 添加图层
-        public void AddLayer(string guid, VisualBrush? brush)
+        public void AddLayer(string guid, VisualBrush? brush, bool isInit)
         {
             var picture = new LayerPicture
             {
@@ -183,8 +183,11 @@ namespace PicEditor.ViewModel
             };
             picture.SelectedChanged += SelectedChanged;
             picture.IsVisibleChanged += IsVisibleChanged;
-            Layers.Clear();
-            Layers.Add(picture);
+            if (isInit)
+            {
+                DeleteGroup(Layers);
+            }
+            Layers.Insert(0, picture);
         }
 
         private void AddLayer(LayerBase? layerBase)

@@ -11,7 +11,7 @@ namespace PicEditor.Interface
     internal interface ILayerManage
     {
         // 设置初始的图层
-        void AddLayer(string guid, VisualBrush brush);
+        void AddLayer(string guid, VisualBrush brush, bool isInit);
 
         // 设置图层缩略图
         void SetLayerThumbnail(string guid, VisualBrush brush);

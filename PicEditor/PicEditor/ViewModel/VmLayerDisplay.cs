@@ -32,20 +32,25 @@ namespace PicEditor.ViewModel
             this.layerManage = layerManage;
         }
 
-        public void SetPictureSource(WriteableBitmap bitmap)
+        public void AddPictureSource(WriteableBitmap bitmap, bool isInit)
         {
-            if (PictureLayers.Count == 0)
+            if (isInit || LayerInfo.CanvasSize.Width == 0 && LayerInfo.CanvasSize.Height == 0)
             {
                 PictureLayers.Clear();
                 LayerInfo.CanvasSize = new Size(bitmap.PixelWidth, bitmap.PixelHeight);
+                LayerInfo.Scale = 1.0;
             }
-            string guid = GuidUtil.GetGuid();
-            var item = new PictureLayer(bitmap) { Guid = guid };
+            var item = new PictureLayer(bitmap)
+            {
+                Guid = GuidUtil.GetGuid(),
+                ImageWidth = bitmap.PixelWidth,
+                ImageHeight = bitmap.PixelHeight,
+            };
+            item.SetSize(LayerInfo.CanvasSize.Width * LayerInfo.Scale, LayerInfo.CanvasSize.Height * LayerInfo.Scale, LayerInfo.Scale);
             PictureLayers.Add(item);
-            LayerInfo.Scale = 1.0;
 
-            layerManage?.AddLayer(guid, item.GetVisualBrush());
-            layerManage?.SetLayerSize(guid, bitmap.PixelWidth, bitmap.PixelHeight);
+            layerManage?.AddLayer(item.Guid, item.GetVisualBrush(), isInit);
+            layerManage?.SetLayerSize(item.Guid, bitmap.PixelWidth, bitmap.PixelHeight);
         }
 
         public void SetLayerVisible(string guid, Visibility visibility)
@@ -63,7 +68,13 @@ namespace PicEditor.ViewModel
         public void LayerAdded(string guid, string? previousGuid)
         {
             var bitmap = FileUtil.GetTransparentBitmap((int)LayerInfo.CanvasSize.Width, (int)LayerInfo.CanvasSize.Height);
-            var item = new PictureLayer(bitmap, LayerInfo.Scale) { Guid = guid };
+            var item = new PictureLayer(bitmap)
+            {
+                Guid = guid,
+                ImageWidth = bitmap.PixelWidth,
+                ImageHeight = bitmap.PixelHeight,
+            };
+            item.SetSize(LayerInfo.CanvasSize.Width * LayerInfo.Scale, LayerInfo.CanvasSize.Height * LayerInfo.Scale, LayerInfo.Scale);
             if (previousGuid == null)
             {
                 PictureLayers.Add(item);
@@ -107,9 +118,9 @@ namespace PicEditor.ViewModel
                     {
                         if (PictureLayers[j] is PictureLayer tempLayer && tempLayer != null && tempLayer.Guid == layerList[i])
                         {
-                            PictureLayers.Remove(layer);
                             PictureLayers.Remove(tempLayer);
                             PictureLayers.Insert(i, tempLayer);
+                            PictureLayers.Remove(layer);
                             PictureLayers.Insert(j, layer);
                             break;
                         }

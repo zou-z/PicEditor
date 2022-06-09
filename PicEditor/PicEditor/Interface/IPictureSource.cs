@@ -9,6 +9,6 @@ namespace PicEditor.Interface
 {
     internal interface IPictureSource
     {
-        void SetPictureSource(WriteableBitmap bitmap);
+        void AddPictureSource(WriteableBitmap bitmap, bool isInit);
     }
 }

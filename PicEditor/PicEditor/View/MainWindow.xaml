@@ -4,17 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PicEditor"
-        xmlns:view="clr-namespace:PicEditor.View"
         xmlns:vm="clr-namespace:PicEditor.ViewModel"
         xmlns:layer="clr-namespace:PicEditor.Layer;assembly=PicEditor.Layer"
         xmlns:control="clr-namespace:PicEditor.View.Control"
+        xmlns:panel="clr-namespace:PicEditor.View.Panel"
         SnapsToDevicePixels="True"
         Title="MainWindow" Height="550" Width="800">
     <DockPanel>
         <Menu DockPanel.Dock="Top" Height="30">
             <MenuItem Header="文件">
                 <MenuItem Header="打开">
-                    <MenuItem Header="本地文件" Command="{Binding Source={x:Static vm:VmLocator.File},Path=OpenFileCommand,Mode=OneTime}"/>
+                    <MenuItem Header="本地图片" Command="{Binding Source={x:Static vm:VmLocator.File},Path=OpenFileCommand,Mode=OneTime}" CommandParameter="Open"/>
+                </MenuItem>
+                <MenuItem Header="插入">
+                    <MenuItem Header="本地图片" Command="{Binding Source={x:Static vm:VmLocator.File},Path=OpenFileCommand,Mode=OneTime}"/>
                 </MenuItem>
                 <MenuItem Header="退出"/>
             </MenuItem>
@@ -26,7 +29,7 @@
             </MenuItem>
         </Menu>
         <DockPanel>
-            <view:EditModePanel DockPanel.Dock="Left" Width="50"/>
+            <panel:EditModePanel DockPanel.Dock="Left" Width="50"/>
             <Grid DockPanel.Dock="Right" Width="200" Background="AliceBlue">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -49,10 +52,11 @@
                         <Button Width="60" Height="30" Content="删除图层" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=DeleteCommand,Mode=OneTime}"/>
                     </StackPanel>
                 </Grid>
+                <panel:PropertyPanel Grid.Row="2" SelectedMode="{Binding Source={x:Static vm:VmLocator.EditMode},Path=SelectedMode,Mode=OneWay}"/>
             </Grid>
 
             <layer:LayerPanel CanvasMargin="100"
-                              IsCanvasMoveEnabled="{Binding Source={x:Static vm:VmLocator.EditMode},Path=EditMode.IsCanvasMoveEnabled,Mode=OneWay}"
+                              IsCanvasMoveEnabled="{Binding Source={x:Static vm:VmLocator.EditMode},Path=IsCanvasMoveEnabled,Mode=OneWay}"
                               Scale="{Binding Source={x:Static vm:VmLocator.LayerDisplay},Path=LayerInfo.Scale,Mode=TwoWay}"
                               Layers="{Binding Source={x:Static vm:VmLocator.LayerDisplay},Path=PictureLayers,Mode=OneWay}"
                               UpperLayers="{Binding Source={x:Static vm:VmLocator.LayerDisplay},Path=UpperLayers,Mode=OneWay}"

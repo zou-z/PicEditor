@@ -7,9 +7,6 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="View\AddPicturePanel.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="View\Control\ScaleSlider.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -19,15 +16,15 @@
     <Compile Update="View\DialogWindow\LayerRenameWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\EditModePanel.xaml.cs">
+    <Compile Update="View\Panel\EditModePanel.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Panel\SynthesisPropertyPanel.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Style\StyleConfig.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="View\AddPicturePanel.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Control\ScaleSlider.xaml">
@@ -39,10 +36,13 @@
     <Page Update="View\DialogWindow\LayerRenameWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\EditModePanel.xaml">
+    <Page Update="View\MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\MainWindow.xaml">
+    <Page Update="View\Panel\EditModePanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Panel\SynthesisPropertyPanel.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

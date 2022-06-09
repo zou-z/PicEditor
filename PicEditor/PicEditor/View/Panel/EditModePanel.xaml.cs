@@ -13,14 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PicEditor.View
+namespace PicEditor.View.Panel
 {
-    /// <summary>
-    /// AddPicturePanel.xaml 的交互逻辑
-    /// </summary>
-    public partial class AddPicturePanel : UserControl
+    internal partial class EditModePanel : StackPanel
     {
-        public AddPicturePanel()
+        public EditModePanel()
         {
             InitializeComponent();
         }
