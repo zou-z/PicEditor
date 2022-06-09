@@ -52,6 +52,7 @@ namespace PicEditor.ViewModel
         }
 
         #region 拖拽改变位置
+        // 把source移动到target的位置或target内
         public void Relocation(LayerBase source, LayerBase target)
         {
             ObservableCollection<LayerBase>? sourceCollection = collectionUtil.FindCollection(Layers, source);
@@ -109,8 +110,11 @@ namespace PicEditor.ViewModel
                     targetGroup.Children.Add(source);
                 }
             }
+            NotifyLayersChanged();
+            UpdateAllChildVisible(Layers, true);
         }
 
+        // 把source移动到最外面
         public void Relocation(LayerBase source)
         {
             ObservableCollection<LayerBase>? sourceCollection = collectionUtil.FindCollection(Layers, source);
@@ -130,6 +134,16 @@ namespace PicEditor.ViewModel
                 }
             }
             Layers.Add(source);
+            NotifyLayersChanged();
+            UpdateAllChildVisible(Layers, true);
+        }
+
+        // 移动了图层或组之后，层级顺序改变
+        private void NotifyLayersChanged()
+        {
+            var list = new List<string>();
+            collectionUtil.TreeToList(Layers, ref list);
+            layerDisplay?.LayersChanged(list);
         }
         #endregion
 
@@ -208,7 +222,6 @@ namespace PicEditor.ViewModel
                 previousGuid = collectionUtil.FindPreviousGuid(Layers, picture.Guid);
             }
             layerDisplay?.LayerAdded(picture.Guid, previousGuid);
-            //layerDisplay?.LayerIndexChanged();
         }
         #endregion
 
@@ -401,6 +414,7 @@ namespace PicEditor.ViewModel
                         collection.Remove(layerBase);
                         collection.Insert(index + 1, layerBase);
                     }
+                    NotifyLayersChanged();
                 }
             }
         }

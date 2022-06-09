@@ -98,7 +98,24 @@ namespace PicEditor.ViewModel
 
         public void LayersChanged(List<string> layerList)
         {
-
+            layerList.Reverse();
+            for (int i = 0; i < layerList.Count; ++i)
+            {
+                if (PictureLayers[i] is PictureLayer layer && layer != null && layer.Guid != layerList[i])
+                {
+                    for (int j = i + 1; j < layerList.Count; ++j)
+                    {
+                        if (PictureLayers[j] is PictureLayer tempLayer && tempLayer != null && tempLayer.Guid == layerList[i])
+                        {
+                            PictureLayers.Remove(layer);
+                            PictureLayers.Remove(tempLayer);
+                            PictureLayers.Insert(i, tempLayer);
+                            PictureLayers.Insert(j, layer);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 }
