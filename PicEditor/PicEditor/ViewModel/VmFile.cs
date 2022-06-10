@@ -16,15 +16,22 @@ using System.Windows.Media.Imaging;
 
 namespace PicEditor.ViewModel
 {
-    internal class VmFile
+    internal class VmFile : ObservableObject
     {
         private IPictureSource? pictureSource = null;
         private PictureSourceInfo? pictureSourceInfo = null;
         private RelayCommand<string>? openFileCommand = null; // openLink,openClipboard, drag in
+        private bool isFunctionOn = false;
 
         public PictureSourceInfo PictureSourceInfo => pictureSourceInfo ??= new PictureSourceInfo();
 
         public RelayCommand<string> OpenFileCommand => openFileCommand ??= new RelayCommand<string>(OpenFile);
+
+        public bool IsFunctionOn
+        {
+            get => isFunctionOn;
+            set => SetProperty(ref isFunctionOn, value);
+        }
 
         public void Initialize(IPictureSource? pictureSource)
         {
@@ -49,6 +56,7 @@ namespace PicEditor.ViewModel
                     var bitmap = FileUtil.ReadLocalFile(dialog.FileName);
                     pictureSource?.AddPictureSource(bitmap, GetIsInit(mode));
                 }
+                IsFunctionOn = GetIsInit(mode);
             }
         }
 

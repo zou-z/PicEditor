@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
 namespace PicEditor.ViewModel
@@ -18,8 +19,8 @@ namespace PicEditor.ViewModel
     {
         private ILayerManage? layerManage = null;
         private LayerInfo? layerInfo = null;
-        private readonly ObservableCollection<ILayer> pictureLayers = new();
-        private readonly ObservableCollection<ILayer> upperLayers = new();
+        private readonly ObservableCollection<ILayer> pictureLayers;
+        private readonly ObservableCollection<ILayer> upperLayers;
 
         public LayerInfo LayerInfo => layerInfo ??= new LayerInfo();
 
@@ -30,6 +31,12 @@ namespace PicEditor.ViewModel
         public void Initialize(ILayerManage layerManage)
         {
             this.layerManage = layerManage;
+        }
+
+        public VmLayerDisplay()
+        {
+            pictureLayers = new();
+            upperLayers = new();
         }
 
         public void AddPictureSource(WriteableBitmap bitmap, bool isInit)
@@ -51,6 +58,31 @@ namespace PicEditor.ViewModel
 
             layerManage?.AddLayer(item.Guid, item.GetVisualBrush(), isInit);
             layerManage?.SetLayerSize(item.Guid, bitmap.PixelWidth, bitmap.PixelHeight);
+
+            // 插入图片
+            if (!isInit && PictureLayers.Count > 0)
+            {
+                RectSelector selector;
+                if (UpperLayers.Count == 0)
+                {
+                    selector = new RectSelector() { DataContext = VmLocator.InsertPicture };
+                    selector.SetBinding(RectSelector.RealLeftProperty, new Binding("Position.RealLeft") { Mode = BindingMode.TwoWay });
+                    selector.SetBinding(RectSelector.RealTopProperty, new Binding("Position.RealTop") { Mode = BindingMode.TwoWay });
+                    selector.SetBinding(RectSelector.RealWidthProperty, new Binding("Position.RealWidth") { Mode = BindingMode.TwoWay });
+                    selector.SetBinding(RectSelector.RealHeightProperty, new Binding("Position.RealHeight") { Mode = BindingMode.TwoWay });
+                    UpperLayers.Add(selector);
+                }
+                else
+                {
+                    selector = (RectSelector)UpperLayers[0];
+                }
+
+                item.SetBinding(PictureLayer.PositionProperty, new Binding("Position") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.OneWay });
+                
+                selector.Visibility = Visibility.Visible;
+                VmLocator.InsertPicture.Position.RealWidth = bitmap.PixelWidth; // scale
+                VmLocator.InsertPicture.Position.RealHeight = bitmap.PixelHeight; // scale
+            }
         }
 
         public void SetLayerVisible(string guid, Visibility visibility)

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -20,6 +21,25 @@ namespace PicEditor.View.Control
 
         public double ImageHeight { get; set; }
 
+        public Rect Position
+        {
+            get { return (Rect)GetValue(PositionProperty); }
+            set { SetValue(PositionProperty, value); }
+        }
+        public static readonly DependencyProperty PositionProperty = DependencyProperty.Register("Position", typeof(Rect), typeof(PictureLayer), new PropertyMetadata(new Rect(),new PropertyChangedCallback(PositionChanged)));
+
+        private static void PositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is PictureLayer self && self != null)
+            {
+                Rect rect = (Rect)e.NewValue;
+                Canvas.SetLeft(self.image, rect.Left * self.scale);
+                Canvas.SetTop(self.image, rect.Top * self.scale);
+                self.image.Width = rect.Width * self.scale;
+                self.image.Height = rect.Height * self.scale;
+            }
+        }
+
         public PictureLayer(WriteableBitmap bitmap)
         {
             image = new Image { Source = bitmap };
@@ -30,6 +50,7 @@ namespace PicEditor.View.Control
 
         public void SetSize(double width, double height, double scale)
         {
+            this.scale = scale;
             Width = width;
             Height = height;
             image.Width = ImageWidth * scale;
@@ -46,6 +67,7 @@ namespace PicEditor.View.Control
             return brush;
         }
 
+        private double scale = 0;
         private readonly Image image;
     }
 }

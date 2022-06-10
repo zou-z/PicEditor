@@ -19,6 +19,9 @@
     <Compile Update="View\Panel\EditModePanel.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\Panel\InsertPropertyPanel.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Panel\SynthesisPropertyPanel.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -40,6 +43,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Panel\EditModePanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Panel\InsertPropertyPanel.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Panel\SynthesisPropertyPanel.xaml">
