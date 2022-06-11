@@ -75,6 +75,11 @@ namespace PicEditor.View.Control
             return id;
         }
 
+        public void SetVisible(Visibility visiblity)
+        {
+            Visibility = visiblity;
+        }
+
         public VisualBrush GetVisualBrush()
         {
             VisualBrush brush = new()
@@ -82,10 +87,6 @@ namespace PicEditor.View.Control
                 Visual = image
             };
             return brush;
-        }
-
-        public void SetSize(double width, double height, double scale)
-        {
         }
 
         public void SetAutoScaleMode()
@@ -105,12 +106,12 @@ namespace PicEditor.View.Control
 
         private static void CanvasSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is ImageEx self && self != null)
+            if (d is ImageEx self && self != null && self.Scale > 0)
             {
                 Size size = (Size)e.NewValue;
                 double width = size.Width * self.Scale;
                 double height = size.Height * self.Scale;
-                if (self.RealLeft != 0 || self.RealTop != 0 || self.RealWidth != self.Width || self.RealHeight != self.Height)
+                if (self.RealLeft != 0 || self.RealTop != 0 || !double.IsNaN(self.Width) && self.RealWidth != self.Width || !double.IsNaN(self.Height) && self.RealHeight != self.Height)
                 {
                     LogUtil.Log.Error(new Exception("尺寸不一致"), $"CanvasSize({self.Width},{self.Height}) ImagePosition({self.RealLeft},{self.RealTop},{self.Width},{self.Height})");
                 }
@@ -144,7 +145,7 @@ namespace PicEditor.View.Control
 
         private static void RealLeftChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is ImageEx self && self != null)
+            if (d is ImageEx self && self != null && self.Scale > 0)
             {
                 double realLeft = (double)e.NewValue;
                 SetLeft(self.image, realLeft * self.Scale);
@@ -153,7 +154,7 @@ namespace PicEditor.View.Control
 
         private static void RealTopChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is ImageEx self && self != null)
+            if (d is ImageEx self && self != null && self.Scale > 0)
             {
                 double realTop = (double)e.NewValue;
                 SetTop(self.image, realTop * self.Scale);
@@ -162,7 +163,7 @@ namespace PicEditor.View.Control
 
         private static void RealWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is ImageEx self && self != null)
+            if (d is ImageEx self && self != null && self.Scale > 0)
             {
                 double realWidth = (double)e.NewValue;
                 self.image.Width = realWidth * self.Scale;
@@ -171,7 +172,7 @@ namespace PicEditor.View.Control
 
         private static void RealHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is ImageEx self && self != null)
+            if (d is ImageEx self && self != null && self.Scale > 0)
             {
                 double realHeight = (double)e.NewValue;
                 self.image.Height = realHeight * self.Scale;

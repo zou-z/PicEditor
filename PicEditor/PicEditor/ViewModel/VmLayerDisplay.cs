@@ -19,14 +19,14 @@ namespace PicEditor.ViewModel
     {
         private ILayerManage? layerManage = null;
         private LayerInfo? layerInfo = null;
-        private readonly ObservableCollection<ILayer> pictureLayers;
-        private readonly ObservableCollection<ILayer> upperLayers;
+        private readonly ObservableCollection<UIElement> pictureLayers;
+        private readonly ObservableCollection<UIElement> upperLayers;
 
         public LayerInfo LayerInfo => layerInfo ??= new LayerInfo();
 
-        public ObservableCollection<ILayer> PictureLayers => pictureLayers;
+        public ObservableCollection<UIElement> PictureLayers => pictureLayers;
 
-        public ObservableCollection<ILayer> UpperLayers => upperLayers;
+        public ObservableCollection<UIElement> UpperLayers => upperLayers;
 
         public void Initialize(ILayerManage layerManage)
         {
@@ -41,51 +41,6 @@ namespace PicEditor.ViewModel
 
         public void AddPictureSource(WriteableBitmap bitmap, bool isInit)
         {
-            //if (isInit || LayerInfo.CanvasSize.Width == 0 && LayerInfo.CanvasSize.Height == 0)
-            //{
-            //    PictureLayers.Clear();
-            //    LayerInfo.CanvasSize = new Size(bitmap.PixelWidth, bitmap.PixelHeight);
-            //    LayerInfo.Scale = 1.0;
-            //}
-            //var item = new PictureLayer(bitmap)
-            //{
-            //    Guid = GuidUtil.GetGuid(),
-            //    ImageWidth = bitmap.PixelWidth,
-            //    ImageHeight = bitmap.PixelHeight,
-            //};
-            //item.SetSize(LayerInfo.CanvasSize.Width * LayerInfo.Scale, LayerInfo.CanvasSize.Height * LayerInfo.Scale, LayerInfo.Scale);
-            //PictureLayers.Add(item);
-
-            //layerManage?.AddLayer(item.Guid, item.GetVisualBrush(), isInit);
-            //layerManage?.SetLayerSize(item.Guid, bitmap.PixelWidth, bitmap.PixelHeight);
-
-            //// 插入图片
-            //if (!isInit && PictureLayers.Count > 0)
-            //{
-            //    RectSelector selector;
-            //    if (UpperLayers.Count == 0)
-            //    {
-            //        selector = new RectSelector() { DataContext = VmLocator.InsertPicture };
-            //        selector.SetBinding(RectSelector.RealLeftProperty, new Binding("Position.RealLeft") { Mode = BindingMode.TwoWay });
-            //        selector.SetBinding(RectSelector.RealTopProperty, new Binding("Position.RealTop") { Mode = BindingMode.TwoWay });
-            //        selector.SetBinding(RectSelector.RealWidthProperty, new Binding("Position.RealWidth") { Mode = BindingMode.TwoWay });
-            //        selector.SetBinding(RectSelector.RealHeightProperty, new Binding("Position.RealHeight") { Mode = BindingMode.TwoWay });
-            //        UpperLayers.Add(selector);
-            //    }
-            //    else
-            //    {
-            //        selector = (RectSelector)UpperLayers[0];
-            //    }
-
-            //    item.SetBinding(PictureLayer.PositionProperty, new Binding("Position") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.OneWay });
-
-            //    selector.Visibility = Visibility.Visible;
-            //    VmLocator.InsertPicture.Position.RealWidth = bitmap.PixelWidth; // scale
-            //    VmLocator.InsertPicture.Position.RealHeight = bitmap.PixelHeight; // scale
-            //}
-
-
-
             if (isInit || LayerInfo.CanvasSize.Width == 0 && LayerInfo.CanvasSize.Height == 0)
             {
                 PictureLayers.Clear();
@@ -134,11 +89,11 @@ namespace PicEditor.ViewModel
 
         public void SetLayerVisible(string guid, Visibility visibility)
         {
-            foreach (PictureLayer layer in PictureLayers)
+            foreach (IPictureLayer layer in PictureLayers)
             {
-                if (layer.Guid == guid)
+                if (layer.GetID() == guid)
                 {
-                    layer.Visibility = visibility;
+                    layer.SetVisible(visibility);
                     return;
                 }
             }
@@ -147,29 +102,25 @@ namespace PicEditor.ViewModel
         public void LayerAdded(string guid, string? previousGuid)
         {
             var bitmap = FileUtil.GetTransparentBitmap((int)LayerInfo.CanvasSize.Width, (int)LayerInfo.CanvasSize.Height);
-            var item = new PictureLayer(bitmap)
-            {
-                Guid = guid,
-                ImageWidth = bitmap.PixelWidth,
-                ImageHeight = bitmap.PixelHeight,
-            };
-            item.SetSize(LayerInfo.CanvasSize.Width * LayerInfo.Scale, LayerInfo.CanvasSize.Height * LayerInfo.Scale, LayerInfo.Scale);
+            var image = new ImageEx(guid, bitmap);
+            image.SetBinding(ImageEx.CanvasSizeProperty, new Binding("CanvasSize") { Source = LayerInfo, Mode = BindingMode.OneWay });
+            image.SetBinding(ImageEx.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });
             if (previousGuid == null)
             {
-                PictureLayers.Add(item);
+                PictureLayers.Add(image);
             }
             else
             {
                 for (int i = 0; i < PictureLayers.Count; ++i)
                 {
-                    if (PictureLayers[i] is PictureLayer layer && layer != null && layer.Guid == previousGuid)
+                    if (PictureLayers[i] is IPictureLayer layer && layer != null && layer.GetID() == previousGuid)
                     {
-                        PictureLayers.Insert(i + 1, item);
+                        PictureLayers.Insert(i + 1, image);
                         break;
                     }
                 }
             }
-            layerManage?.SetLayerThumbnail(guid, item.GetVisualBrush());
+            layerManage?.SetLayerThumbnail(guid, image.GetVisualBrush());
             layerManage?.SetLayerSize(guid, bitmap.PixelWidth, bitmap.PixelHeight);
         }
 
@@ -177,7 +128,7 @@ namespace PicEditor.ViewModel
         {
             for (int i = 0; i < PictureLayers.Count; ++i)
             {
-                if (PictureLayers[i] is PictureLayer layer && layer != null && layer.Guid == guid)
+                if (PictureLayers[i] is IPictureLayer layer && layer != null && layer.GetID() == guid)
                 {
                     PictureLayers.RemoveAt(i);
                     return;
@@ -191,16 +142,16 @@ namespace PicEditor.ViewModel
             layerList.Reverse();
             for (int i = 0; i < layerList.Count; ++i)
             {
-                if (PictureLayers[i] is PictureLayer layer && layer != null && layer.Guid != layerList[i])
+                if (PictureLayers[i] is IPictureLayer layer && layer != null && layer.GetID() != layerList[i])
                 {
                     for (int j = i + 1; j < layerList.Count; ++j)
                     {
-                        if (PictureLayers[j] is PictureLayer tempLayer && tempLayer != null && tempLayer.Guid == layerList[i])
+                        if (PictureLayers[j] is IPictureLayer tempLayer && tempLayer != null && tempLayer.GetID() == layerList[i])
                         {
-                            PictureLayers.Remove(tempLayer);
-                            PictureLayers.Insert(i, tempLayer);
-                            PictureLayers.Remove(layer);
-                            PictureLayers.Insert(j, layer);
+                            PictureLayers.Remove((UIElement)tempLayer);
+                            PictureLayers.Insert(i, (UIElement)tempLayer);
+                            PictureLayers.Remove((UIElement)layer);
+                            PictureLayers.Insert(j, (UIElement)layer);
                             break;
                         }
                     }

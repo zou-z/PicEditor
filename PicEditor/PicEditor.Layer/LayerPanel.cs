@@ -16,16 +16,16 @@ namespace PicEditor.Layer
     {
         #region public
         // 图片图层
-        public ObservableCollection<ILayer> Layers
+        public ObservableCollection<UIElement> Layers
         {
-            get => (ObservableCollection<ILayer>)GetValue(LayersProperty);
+            get => (ObservableCollection<UIElement>)GetValue(LayersProperty);
             set => SetValue(LayersProperty, value);
         }
 
         // 图片图层上面的图层
-        public ObservableCollection<ILayer> UpperLayers
+        public ObservableCollection<UIElement> UpperLayers
         {
-            get => (ObservableCollection<ILayer>)GetValue(UpperLayersProperty);
+            get => (ObservableCollection<UIElement>)GetValue(UpperLayersProperty);
             set => SetValue(UpperLayersProperty, value);
         }
 
@@ -103,11 +103,11 @@ namespace PicEditor.Layer
         {
             if (d is LayerPanel self && self != null)
             {
-                if (e.OldValue is ObservableCollection<ILayer> oldLayers && oldLayers != null)
+                if (e.OldValue is ObservableCollection<UIElement> oldLayers && oldLayers != null)
                 {
                     oldLayers.CollectionChanged -= self.ContentChanged;
                 }
-                if (e.NewValue is ObservableCollection<ILayer> newLayers && newLayers != null)
+                if (e.NewValue is ObservableCollection<UIElement> newLayers && newLayers != null)
                 {
                     newLayers.CollectionChanged += self.ContentChanged;
                 }
@@ -146,21 +146,21 @@ namespace PicEditor.Layer
             canvas.Children.Add(squareBackground);
             if (Layers != null)
             {
-                foreach (ILayer? layer in Layers)
+                foreach (UIElement layer in Layers)
                 {
-                    if (layer != null && layer is UIElement element && element != null)
+                    if (layer != null)
                     {
-                        canvas.Children.Add(element);
+                        canvas.Children.Add(layer);
                     }
                 }
             }
             if (UpperLayers != null)
             {
-                foreach (ILayer? layer in UpperLayers)
+                foreach (UIElement layer in UpperLayers)
                 {
-                    if (layer != null && layer is UIElement element && element != null)
+                    if (layer != null)
                     {
-                        canvas.Children.Add(element);
+                        canvas.Children.Add(layer);
                     }
                 }
             }
@@ -260,13 +260,6 @@ namespace PicEditor.Layer
 
             // 计算和设置每个控件的位置和尺寸
             SetCanvasSize(CanvasSize.Width * scale, CanvasSize.Height * scale);
-            foreach (object? child in canvas.Children)
-            {
-                if (child is ILayer layer && layer != null)
-                {
-                    layer.SetSize(canvas.Width, canvas.Height, scale);
-                }
-            }
             scaleContext.Set(scale);
             isScalingByMouseWheel = true;
             Scale = scaleContext.Get();
@@ -293,13 +286,6 @@ namespace PicEditor.Layer
 
             // 计算和设置每个控件的位置和尺寸
             SetCanvasSize(CanvasSize.Width * scale, CanvasSize.Height * scale);
-            foreach (object? child in canvas.Children)
-            {
-                if (child is ILayer layer && layer != null)
-                {
-                    layer.SetSize(canvas.Width, canvas.Height, scale);
-                }
-            }
             scaleContext.Set(scale);
         }
 
@@ -314,8 +300,8 @@ namespace PicEditor.Layer
 
         #endregion
 
-        public static readonly DependencyProperty LayersProperty = DependencyProperty.Register("Layers", typeof(ObservableCollection<ILayer>), typeof(LayerPanel), new PropertyMetadata(null, new PropertyChangedCallback(LayersSourceChanged)));
-        public static readonly DependencyProperty UpperLayersProperty = DependencyProperty.Register("UpperLayers", typeof(ObservableCollection<ILayer>), typeof(LayerPanel), new PropertyMetadata(null, new PropertyChangedCallback(LayersSourceChanged)));
+        public static readonly DependencyProperty LayersProperty = DependencyProperty.Register("Layers", typeof(ObservableCollection<UIElement>), typeof(LayerPanel), new PropertyMetadata(null, new PropertyChangedCallback(LayersSourceChanged)));
+        public static readonly DependencyProperty UpperLayersProperty = DependencyProperty.Register("UpperLayers", typeof(ObservableCollection<UIElement>), typeof(LayerPanel), new PropertyMetadata(null, new PropertyChangedCallback(LayersSourceChanged)));
         public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register("Scale", typeof(double), typeof(LayerPanel), new PropertyMetadata(0d, new PropertyChangedCallback(ScaleChanged)));
         public static readonly DependencyProperty CanvasSizeProperty = DependencyProperty.Register("CanvasSize", typeof(Size), typeof(LayerPanel), new PropertyMetadata(new Size(0, 0), new PropertyChangedCallback(CanvasSizeChanged)));
         public static readonly DependencyProperty CanvasMarginProperty = DependencyProperty.Register("CanvasMargin", typeof(Thickness), typeof(LayerPanel), new PropertyMetadata(new Thickness(0), new PropertyChangedCallback(CanvasMarginChanged)));

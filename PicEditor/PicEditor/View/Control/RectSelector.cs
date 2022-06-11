@@ -12,7 +12,7 @@ using System.Windows.Shapes;
 
 namespace PicEditor.View.Control
 {
-    public class RectSelector : System.Windows.Controls.Panel, ILayer
+    public class RectSelector : System.Windows.Controls.Panel
     {
         public double Scale
         {
@@ -261,10 +261,6 @@ namespace PicEditor.View.Control
                     }
                 }
             }
-        }
-
-        public void SetSize(double width, double height, double scale)
-        {
         }
 
         private static void ScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
