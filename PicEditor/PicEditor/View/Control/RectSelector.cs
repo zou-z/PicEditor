@@ -14,6 +14,12 @@ namespace PicEditor.View.Control
 {
     public class RectSelector : System.Windows.Controls.Panel, ILayer
     {
+        public double Scale
+        {
+            get => (double)GetValue(ScaleProperty);
+            set => SetValue(ScaleProperty, value);
+        }
+
         public double RealLeft
         {
             get { return (double)GetValue(RealLeftProperty); }
@@ -141,7 +147,6 @@ namespace PicEditor.View.Control
         private readonly Border sThumb;
         private readonly Border wThumb;
         private readonly Border eThumb;
-        private double scale = 1.0;
         private bool isPressed = false;
         private Modes mode = Modes.Default;
         private Point point = new(0, 0);
@@ -231,28 +236,28 @@ namespace PicEditor.View.Control
                 Point p = e.GetPosition(parent);
                 if (mode == Modes.Default)
                 {
-                    RealLeft = (point.X + p.X - startPoint.X) / scale;
-                    RealTop = (point.Y + p.Y - startPoint.Y) / scale;
+                    RealLeft = (point.X + p.X - startPoint.X) / Scale;
+                    RealTop = (point.Y + p.Y - startPoint.Y) / Scale;
                 }
                 else
                 {
                     if ((mode & Modes.N) == Modes.N)
                     {
-                        RealTop = (p.Y >= point.Y - 1 ? point.Y - 1 : p.Y) / scale;
-                        RealHeight = (p.Y >= point.Y - 1 ? 1 : point.Y - p.Y) / scale;
+                        RealTop = (p.Y >= point.Y - 1 ? point.Y - 1 : p.Y) / Scale;
+                        RealHeight = (p.Y >= point.Y - 1 ? 1 : point.Y - p.Y) / Scale;
                     }
                     else if ((mode & Modes.S) == Modes.S)
                     {
-                        RealHeight = (p.Y - 1 <= point.Y ? 1 : p.Y - point.Y) / scale;
+                        RealHeight = (p.Y - 1 <= point.Y ? 1 : p.Y - point.Y) / Scale;
                     }
                     if ((mode & Modes.W) == Modes.W)
                     {
-                        RealLeft = (p.X >= point.X - 1 ? point.X - 1 : p.X) / scale;
-                        RealWidth = (p.X >= point.X - 1 ? 1 : point.X - p.X) / scale;
+                        RealLeft = (p.X >= point.X - 1 ? point.X - 1 : p.X) / Scale;
+                        RealWidth = (p.X >= point.X - 1 ? 1 : point.X - p.X) / Scale;
                     }
                     else if ((mode & Modes.E) == Modes.E)
                     {
-                        RealWidth = (p.X - 1 <= point.X ? 1 : p.X - point.X) / scale;
+                        RealWidth = (p.X - 1 <= point.X ? 1 : p.X - point.X) / Scale;
                     }
                 }
             }
@@ -260,48 +265,56 @@ namespace PicEditor.View.Control
 
         public void SetSize(double width, double height, double scale)
         {
-            this.scale = scale;
-            Canvas.SetLeft(this, RealLeft * scale);
-            Canvas.SetTop(this, RealTop * scale);
-            Width = RealWidth * scale;
-            Height = RealHeight * scale;
         }
 
-        private static void LeftChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void ScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is RectSelector self && self != null)
             {
-                Canvas.SetLeft(self, (double)e.NewValue * self.scale);
+                double scale = (double)e.NewValue;
+                self.Width = self.RealWidth * scale;
+                self.Height = self.RealHeight * scale;
+                Canvas.SetLeft(self, self.RealLeft * scale);
+                Canvas.SetTop(self, self.RealTop * scale);
             }
         }
 
-        private static void TopChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void RealLeftChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is RectSelector self && self != null)
             {
-                Canvas.SetTop(self, (double)e.NewValue * self.scale);
+                Canvas.SetLeft(self, (double)e.NewValue * self.Scale);
             }
         }
 
-        private static void WidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void RealTopChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is RectSelector self && self != null)
             {
-                self.Width = (double)e.NewValue * self.scale;
+                Canvas.SetTop(self, (double)e.NewValue * self.Scale);
             }
         }
 
-        private static void HeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void RealWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is RectSelector self && self != null)
             {
-                self.Height = (double)e.NewValue * self.scale;
+                self.Width = (double)e.NewValue * self.Scale;
             }
         }
 
-        public static readonly DependencyProperty RealLeftProperty = DependencyProperty.Register("RealLeft", typeof(double), typeof(RectSelector), new PropertyMetadata(0d, new PropertyChangedCallback(LeftChanged)));
-        public static readonly DependencyProperty RealTopProperty = DependencyProperty.Register("RealTop", typeof(double), typeof(RectSelector), new PropertyMetadata(0d, new PropertyChangedCallback(TopChanged)));
-        public static readonly DependencyProperty RealWidthProperty = DependencyProperty.Register("RealWidth", typeof(double), typeof(RectSelector), new PropertyMetadata(0d, new PropertyChangedCallback(WidthChanged)));
-        public static readonly DependencyProperty RealHeightProperty = DependencyProperty.Register("RealHeight", typeof(double), typeof(RectSelector), new PropertyMetadata(0d, new PropertyChangedCallback(HeightChanged)));
+        private static void RealHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is RectSelector self && self != null)
+            {
+                self.Height = (double)e.NewValue * self.Scale;
+            }
+        }
+
+        public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register("Scale", typeof(double), typeof(RectSelector), new PropertyMetadata(0d, new PropertyChangedCallback(ScaleChanged)));
+        public static readonly DependencyProperty RealLeftProperty = DependencyProperty.Register("RealLeft", typeof(double), typeof(RectSelector), new PropertyMetadata(0d, new PropertyChangedCallback(RealLeftChanged)));
+        public static readonly DependencyProperty RealTopProperty = DependencyProperty.Register("RealTop", typeof(double), typeof(RectSelector), new PropertyMetadata(0d, new PropertyChangedCallback(RealTopChanged)));
+        public static readonly DependencyProperty RealWidthProperty = DependencyProperty.Register("RealWidth", typeof(double), typeof(RectSelector), new PropertyMetadata(0d, new PropertyChangedCallback(RealWidthChanged)));
+        public static readonly DependencyProperty RealHeightProperty = DependencyProperty.Register("RealHeight", typeof(double), typeof(RectSelector), new PropertyMetadata(0d, new PropertyChangedCallback(RealHeightChanged)));
     }
 }

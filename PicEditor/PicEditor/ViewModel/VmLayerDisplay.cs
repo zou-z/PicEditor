@@ -41,35 +41,79 @@ namespace PicEditor.ViewModel
 
         public void AddPictureSource(WriteableBitmap bitmap, bool isInit)
         {
+            //if (isInit || LayerInfo.CanvasSize.Width == 0 && LayerInfo.CanvasSize.Height == 0)
+            //{
+            //    PictureLayers.Clear();
+            //    LayerInfo.CanvasSize = new Size(bitmap.PixelWidth, bitmap.PixelHeight);
+            //    LayerInfo.Scale = 1.0;
+            //}
+            //var item = new PictureLayer(bitmap)
+            //{
+            //    Guid = GuidUtil.GetGuid(),
+            //    ImageWidth = bitmap.PixelWidth,
+            //    ImageHeight = bitmap.PixelHeight,
+            //};
+            //item.SetSize(LayerInfo.CanvasSize.Width * LayerInfo.Scale, LayerInfo.CanvasSize.Height * LayerInfo.Scale, LayerInfo.Scale);
+            //PictureLayers.Add(item);
+
+            //layerManage?.AddLayer(item.Guid, item.GetVisualBrush(), isInit);
+            //layerManage?.SetLayerSize(item.Guid, bitmap.PixelWidth, bitmap.PixelHeight);
+
+            //// 插入图片
+            //if (!isInit && PictureLayers.Count > 0)
+            //{
+            //    RectSelector selector;
+            //    if (UpperLayers.Count == 0)
+            //    {
+            //        selector = new RectSelector() { DataContext = VmLocator.InsertPicture };
+            //        selector.SetBinding(RectSelector.RealLeftProperty, new Binding("Position.RealLeft") { Mode = BindingMode.TwoWay });
+            //        selector.SetBinding(RectSelector.RealTopProperty, new Binding("Position.RealTop") { Mode = BindingMode.TwoWay });
+            //        selector.SetBinding(RectSelector.RealWidthProperty, new Binding("Position.RealWidth") { Mode = BindingMode.TwoWay });
+            //        selector.SetBinding(RectSelector.RealHeightProperty, new Binding("Position.RealHeight") { Mode = BindingMode.TwoWay });
+            //        UpperLayers.Add(selector);
+            //    }
+            //    else
+            //    {
+            //        selector = (RectSelector)UpperLayers[0];
+            //    }
+
+            //    item.SetBinding(PictureLayer.PositionProperty, new Binding("Position") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.OneWay });
+
+            //    selector.Visibility = Visibility.Visible;
+            //    VmLocator.InsertPicture.Position.RealWidth = bitmap.PixelWidth; // scale
+            //    VmLocator.InsertPicture.Position.RealHeight = bitmap.PixelHeight; // scale
+            //}
+
+
+
             if (isInit || LayerInfo.CanvasSize.Width == 0 && LayerInfo.CanvasSize.Height == 0)
             {
                 PictureLayers.Clear();
                 LayerInfo.CanvasSize = new Size(bitmap.PixelWidth, bitmap.PixelHeight);
                 LayerInfo.Scale = 1.0;
             }
-            var item = new PictureLayer(bitmap)
-            {
-                Guid = GuidUtil.GetGuid(),
-                ImageWidth = bitmap.PixelWidth,
-                ImageHeight = bitmap.PixelHeight,
-            };
-            item.SetSize(LayerInfo.CanvasSize.Width * LayerInfo.Scale, LayerInfo.CanvasSize.Height * LayerInfo.Scale, LayerInfo.Scale);
-            PictureLayers.Add(item);
+            bool isInsertPicture = !isInit && PictureLayers.Count > 0;
+            var image = new ImageEx(GuidUtil.GetGuid(), bitmap, !isInsertPicture);
+            PictureLayers.Add(image);
 
-            layerManage?.AddLayer(item.Guid, item.GetVisualBrush(), isInit);
-            layerManage?.SetLayerSize(item.Guid, bitmap.PixelWidth, bitmap.PixelHeight);
+            layerManage?.AddLayer(image.GetID(), image.GetVisualBrush(), isInit);
+            layerManage?.SetLayerSize(image.GetID(), bitmap.PixelWidth, bitmap.PixelHeight);
+
+            image.SetBinding(ImageEx.CanvasSizeProperty, new Binding("CanvasSize") { Source = LayerInfo, Mode = BindingMode.OneWay });
+            image.SetBinding(ImageEx.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });
 
             // 插入图片
-            if (!isInit && PictureLayers.Count > 0)
+            if (isInsertPicture)
             {
                 RectSelector selector;
                 if (UpperLayers.Count == 0)
                 {
-                    selector = new RectSelector() { DataContext = VmLocator.InsertPicture };
-                    selector.SetBinding(RectSelector.RealLeftProperty, new Binding("Position.RealLeft") { Mode = BindingMode.TwoWay });
-                    selector.SetBinding(RectSelector.RealTopProperty, new Binding("Position.RealTop") { Mode = BindingMode.TwoWay });
-                    selector.SetBinding(RectSelector.RealWidthProperty, new Binding("Position.RealWidth") { Mode = BindingMode.TwoWay });
-                    selector.SetBinding(RectSelector.RealHeightProperty, new Binding("Position.RealHeight") { Mode = BindingMode.TwoWay });
+                    selector = new RectSelector();
+                    selector.SetBinding(RectSelector.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });
+                    selector.SetBinding(RectSelector.RealLeftProperty, new Binding("RealLeft") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.TwoWay });
+                    selector.SetBinding(RectSelector.RealTopProperty, new Binding("RealTop") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.TwoWay });
+                    selector.SetBinding(RectSelector.RealWidthProperty, new Binding("RealWidth") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.TwoWay });
+                    selector.SetBinding(RectSelector.RealHeightProperty, new Binding("RealHeight") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.TwoWay });
                     UpperLayers.Add(selector);
                 }
                 else
@@ -77,11 +121,14 @@ namespace PicEditor.ViewModel
                     selector = (RectSelector)UpperLayers[0];
                 }
 
-                item.SetBinding(PictureLayer.PositionProperty, new Binding("Position") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.OneWay });
-                
+                image.SetBinding(ImageEx.RealLeftProperty, new Binding("RealLeft") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.OneWay });
+                image.SetBinding(ImageEx.RealTopProperty, new Binding("RealTop") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.OneWay });
+                image.SetBinding(ImageEx.RealWidthProperty, new Binding("RealWidth") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.OneWay });
+                image.SetBinding(ImageEx.RealHeightProperty, new Binding("RealHeight") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.OneWay });
+
                 selector.Visibility = Visibility.Visible;
-                VmLocator.InsertPicture.Position.RealWidth = bitmap.PixelWidth; // scale
-                VmLocator.InsertPicture.Position.RealHeight = bitmap.PixelHeight; // scale
+                VmLocator.InsertPicture.Position.RealWidth = bitmap.PixelWidth;
+                VmLocator.InsertPicture.Position.RealHeight = bitmap.PixelHeight;
             }
         }
 
