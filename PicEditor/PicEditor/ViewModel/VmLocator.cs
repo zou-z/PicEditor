@@ -31,7 +31,7 @@
         private static void ViewModelInit()
         {
             vmFile.Initialize(vmLayerDisplay);
-            vmLayerDisplay.Initialize(vmLayerManage);
+            vmLayerDisplay.Initialize(vmLayerManage, vmInsertPicture);
             vmLayerManage.Initialize(vmLayerDisplay);
         }
     }

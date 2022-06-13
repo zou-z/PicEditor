@@ -18,6 +18,7 @@ namespace PicEditor.ViewModel
     internal class VmLayerDisplay : IPictureSource, ILayerDisplay
     {
         private ILayerManage? layerManage = null;
+        private IInsertPicture? insertPicture = null;
         private LayerInfo? layerInfo = null;
         private readonly ObservableCollection<UIElement> pictureLayers;
         private readonly ObservableCollection<UIElement> upperLayers;
@@ -28,9 +29,10 @@ namespace PicEditor.ViewModel
 
         public ObservableCollection<UIElement> UpperLayers => upperLayers;
 
-        public void Initialize(ILayerManage layerManage)
+        public void Initialize(ILayerManage layerManage, IInsertPicture insertPicture)
         {
             this.layerManage = layerManage;
+            this.insertPicture = insertPicture;
         }
 
         public VmLayerDisplay()
@@ -65,10 +67,10 @@ namespace PicEditor.ViewModel
                 {
                     selector = new RectSelector();
                     selector.SetBinding(RectSelector.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });
-                    selector.SetBinding(RectSelector.RealLeftProperty, new Binding("RealLeft") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.TwoWay });
-                    selector.SetBinding(RectSelector.RealTopProperty, new Binding("RealTop") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.TwoWay });
-                    selector.SetBinding(RectSelector.RealWidthProperty, new Binding("RealWidth") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.TwoWay });
-                    selector.SetBinding(RectSelector.RealHeightProperty, new Binding("RealHeight") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.TwoWay });
+                    selector.SetBinding(RectSelector.RealLeftProperty, new Binding("RealLeft") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
+                    selector.SetBinding(RectSelector.RealTopProperty, new Binding("RealTop") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
+                    selector.SetBinding(RectSelector.RealWidthProperty, new Binding("RealWidth") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
+                    selector.SetBinding(RectSelector.RealHeightProperty, new Binding("RealHeight") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
                     UpperLayers.Add(selector);
                 }
                 else
@@ -76,14 +78,13 @@ namespace PicEditor.ViewModel
                     selector = (RectSelector)UpperLayers[0];
                 }
 
-                image.SetBinding(ImageEx.RealLeftProperty, new Binding("RealLeft") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.OneWay });
-                image.SetBinding(ImageEx.RealTopProperty, new Binding("RealTop") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.OneWay });
-                image.SetBinding(ImageEx.RealWidthProperty, new Binding("RealWidth") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.OneWay });
-                image.SetBinding(ImageEx.RealHeightProperty, new Binding("RealHeight") { Source = VmLocator.InsertPicture.Position, Mode = BindingMode.OneWay });
+                image.SetBinding(ImageEx.RealLeftProperty, new Binding("RealLeft") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
+                image.SetBinding(ImageEx.RealTopProperty, new Binding("RealTop") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
+                image.SetBinding(ImageEx.RealWidthProperty, new Binding("RealWidth") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
+                image.SetBinding(ImageEx.RealHeightProperty, new Binding("RealHeight") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
 
+                insertPicture?.InitData(bitmap.PixelWidth, bitmap.PixelHeight);
                 selector.Visibility = Visibility.Visible;
-                VmLocator.InsertPicture.Position.RealWidth = bitmap.PixelWidth;
-                VmLocator.InsertPicture.Position.RealHeight = bitmap.PixelHeight;
             }
         }
 

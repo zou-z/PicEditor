@@ -1,4 +1,5 @@
-﻿using PicEditor.Model.PictureInfo;
+﻿using PicEditor.Interface;
+using PicEditor.Model.PictureInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PicEditor.ViewModel
 {
-    internal class VmInsertPicture
+    internal class VmInsertPicture : IInsertPicture
     {
         private PicturePosition? picturePosition = null;
 
@@ -18,6 +19,14 @@ namespace PicEditor.ViewModel
 
         }
 
+        public object GetPositionSource()
+        {
+            return Position;
+        }
 
+        public void InitData(int width, int height)
+        {
+            Position.InitData(width, height);
+        }
     }
 }

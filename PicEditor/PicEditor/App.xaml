@@ -10,6 +10,8 @@
             <converter:MultiBoolConverter x:Key="multiBoolConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Style/StyleConfig.xaml"/>
+                <ResourceDictionary Source="Style/ScrollViewer.xaml"/>
+                <ResourceDictionary Source="Style/CheckBox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

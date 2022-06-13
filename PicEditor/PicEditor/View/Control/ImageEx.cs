@@ -120,7 +120,7 @@ namespace PicEditor.View.Control
                 double height = size.Height * self.Scale;
                 if (self.RealLeft != 0 || self.RealTop != 0 || !double.IsNaN(self.Width) && self.RealWidth != self.Width || !double.IsNaN(self.Height) && self.RealHeight != self.Height)
                 {
-                    LogUtil.Log.Error(new Exception("尺寸不一致"), $"CanvasSize({self.Width},{self.Height}) ImagePosition({self.RealLeft},{self.RealTop},{self.Width},{self.Height})");
+                    LogUtil.Log.Error(new Exception("图片与画布尺寸不一致"), $"CanvasSize({self.Width},{self.Height}) ImagePosition({self.RealLeft},{self.RealTop},{self.Width},{self.Height})");
                 }
                 else
                 {
