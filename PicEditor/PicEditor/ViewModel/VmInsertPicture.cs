@@ -16,7 +16,6 @@ namespace PicEditor.ViewModel
 
         public VmInsertPicture()
         {
-
         }
 
         public object GetPositionSource()

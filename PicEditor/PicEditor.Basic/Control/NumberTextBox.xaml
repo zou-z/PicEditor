@@ -64,6 +64,9 @@
                             <Trigger Property="Validation.HasError" Value="True">
                                 <Setter Property="BorderBrush" Value="Red"/>
                             </Trigger>
+                            <Trigger Property="Tag" Value="Error">
+                                <Setter Property="BorderBrush" Value="Red"/>
+                            </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.5"/>
                             </Trigger>

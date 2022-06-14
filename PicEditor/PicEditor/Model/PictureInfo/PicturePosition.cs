@@ -12,76 +12,47 @@ namespace PicEditor.Model.PictureInfo
     internal class PicturePosition : ObservableObject
     {
         //private bool isCheckBoundary;
-        private double whRatio = 0;
         private double realLeft = 0;
         private double realTop = 0;
         private double realWidth = 0;
         private double realHeight = 0;
+        private double whRatio = 0;
         private bool isKeepRatio = true;
 
         public double RealLeft
         {
             get => realLeft;
-            set
-            {
-                SetProperty(ref realLeft, (int)value);
-            }
+            set => SetProperty(ref realLeft, (int)value);
         }
 
         public double RealTop
         {
             get => realTop;
-            set
-            {
-                SetProperty(ref realTop, (int)value);
-            }
+            set => SetProperty(ref realTop, (int)value);
         }
 
         public double RealWidth
         {
             get => realWidth;
-            set
-            {
-                SetProperty(ref realWidth, (int)value);
-                if (isKeepRatio)
-                {
-                    SetProperty(ref realHeight, (int)(value / whRatio), nameof(RealHeight));
-                }
-            }
+            set => SetProperty(ref realWidth, (int)value);
         }
 
         public double RealHeight
         {
             get => realHeight;
-            set
-            {
-                SetProperty(ref realHeight, (int)value);
+            set => SetProperty(ref realHeight, (int)value);
+        }
 
-                if (isKeepRatio)
-                {
-                    SetProperty(ref realWidth, (int)(value * whRatio), nameof(RealWidth));
-                }
-            }
+        public double WhRatio
+        {
+            get => whRatio;
+            private set => SetProperty(ref whRatio, value);
         }
 
         public bool IsKeepRatio
         {
             get => isKeepRatio;
-            set
-            {
-                SetProperty(ref isKeepRatio, value);
-                if (value)
-                {
-                    if (RealWidth / RealHeight > whRatio)
-                    {
-                        SetProperty(ref realWidth, (int)(RealHeight * whRatio), nameof(RealWidth));
-                    }
-                    else
-                    {
-                        SetProperty(ref realHeight, (int)(RealWidth / whRatio), nameof(RealHeight));
-                    }
-                }
-            }
+            set => SetProperty(ref isKeepRatio, value);
         }
 
         public void InitData(int width, int height)
@@ -90,14 +61,15 @@ namespace PicEditor.Model.PictureInfo
             SetProperty(ref realTop, 0, nameof(RealTop));
             SetProperty(ref realWidth, width, nameof(RealWidth));
             SetProperty(ref realHeight, height, nameof(RealHeight));
+            SetProperty(ref isKeepRatio, true, nameof(IsKeepRatio));
             if (RealHeight == 0)
             {
                 LogUtil.Log.Error(new Exception("图片高度为0"), "RealHeight为0");
-                whRatio = 0;
+                SetProperty(ref whRatio, 0, nameof(WhRatio));
             }
             else
             {
-                whRatio = RealWidth / RealHeight;
+                SetProperty(ref whRatio, RealWidth / RealHeight, nameof(WhRatio));
             }
         }
     }

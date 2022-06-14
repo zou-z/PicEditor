@@ -56,7 +56,7 @@ namespace PicEditor.View.Control
         {
             this.id = id;
             this.isAutoScaleMode = isAutoScaleMode;
-            image = new Image { Source = bitmap };
+            image = new Image { Source = bitmap, Stretch = Stretch.Fill };
             Children.Add(image);
             Background = Brushes.Transparent;
             EditingMode = InkCanvasEditingMode.None;

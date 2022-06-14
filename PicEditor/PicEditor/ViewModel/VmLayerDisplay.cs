@@ -71,6 +71,8 @@ namespace PicEditor.ViewModel
                     selector.SetBinding(RectSelector.RealTopProperty, new Binding("RealTop") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
                     selector.SetBinding(RectSelector.RealWidthProperty, new Binding("RealWidth") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
                     selector.SetBinding(RectSelector.RealHeightProperty, new Binding("RealHeight") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
+                    selector.SetBinding(RectSelector.WhRatioProperty, new Binding("WhRatio") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
+                    selector.SetBinding(RectSelector.IsKeepRatioProperty, new Binding("IsKeepRatio") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
                     UpperLayers.Add(selector);
                 }
                 else
