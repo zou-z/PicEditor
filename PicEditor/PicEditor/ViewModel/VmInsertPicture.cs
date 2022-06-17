@@ -11,9 +11,11 @@ namespace PicEditor.ViewModel
 {
     internal class VmInsertPicture : IInsertPicture
     {
+        private ICanvas? canvas = null;
         private PicturePosition? picturePosition = null;
         private RelayCommand<PictureRotate>? rotateCommand = null;
         private RelayCommand<PictureMirror>? mirrorCommand = null;
+        private RelayCommand<PictureAlign>? alignCommand = null;
 
         public PicturePosition Position => picturePosition ??= new PicturePosition();
 
@@ -21,8 +23,15 @@ namespace PicEditor.ViewModel
 
         public RelayCommand<PictureMirror> MirrorCommand => mirrorCommand ??= new RelayCommand<PictureMirror>(Mirror);
 
+        public RelayCommand<PictureAlign> AlignCommand => alignCommand ??= new RelayCommand<PictureAlign>(Align);
+
         public VmInsertPicture()
         {
+        }
+
+        public void Initialize(ICanvas canvas)
+        {
+            this.canvas = canvas;
         }
 
         public object GetPositionSource()
@@ -52,6 +61,34 @@ namespace PicEditor.ViewModel
             if (Position.Mirror == PictureMirror.None)
             {
                 Position.Mirror = mirror;
+            }
+        }
+
+        private void Align(PictureAlign align)
+        {
+            if (align == PictureAlign.AlignLeft)
+            {
+                Position.RealLeft = 0;
+            }
+            else if (align == PictureAlign.AlignTop)
+            {
+                Position.RealTop = 0;
+            }
+            else if (align == PictureAlign.AlignRight && canvas != null)
+            {
+                Position.RealLeft = canvas.GetCanvasSize().Width - Position.RealWidth;
+            }
+            else if (align == PictureAlign.AlignBottom && canvas != null)
+            {
+                Position.RealTop = canvas.GetCanvasSize().Height - Position.RealHeight;
+            }
+            else if (align == PictureAlign.AlignHorizontalCenter && canvas != null)
+            {
+                Position.RealLeft = (canvas.GetCanvasSize().Width - Position.RealWidth) / 2;
+            }
+            else if (align == PictureAlign.AlignVerticalCenter && canvas != null)
+            {
+                Position.RealTop = (canvas.GetCanvasSize().Height - Position.RealHeight) / 2;
             }
         }
     }

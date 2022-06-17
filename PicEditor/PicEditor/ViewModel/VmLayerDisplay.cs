@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 
 namespace PicEditor.ViewModel
 {
-    internal class VmLayerDisplay : IPictureSource, ILayerDisplay
+    internal class VmLayerDisplay : IPictureSource, ILayerDisplay, ICanvas
     {
         private ILayerManage? layerManage = null;
         private IInsertPicture? insertPicture = null;
@@ -162,6 +162,11 @@ namespace PicEditor.ViewModel
                     }
                 }
             }
+        }
+
+        public Size GetCanvasSize()
+        {
+            return LayerInfo.CanvasSize;
         }
     }
 }

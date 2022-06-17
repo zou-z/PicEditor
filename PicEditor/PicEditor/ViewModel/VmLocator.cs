@@ -33,6 +33,7 @@
             vmFile.Initialize(vmLayerDisplay);
             vmLayerDisplay.Initialize(vmLayerManage, vmInsertPicture);
             vmLayerManage.Initialize(vmLayerDisplay);
+            vmInsertPicture.Initialize(vmLayerDisplay);
         }
     }
 }

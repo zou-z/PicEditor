@@ -28,6 +28,16 @@
             <Button Width="30" Height="30" ToolTip="水平镜像" Command="{Binding MirrorCommand,Mode=OneTime}" CommandParameter="{x:Static model:PictureMirror.MirrorHorizontal}"/>
             <Button Width="30" Height="30" ToolTip="垂直镜像" Command="{Binding MirrorCommand,Mode=OneTime}" CommandParameter="{x:Static model:PictureMirror.MirrorVertical}"/>
         </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+            <Button Width="30" Height="30" ToolTip="左对齐" Command="{Binding AlignCommand,Mode=OneTime}" CommandParameter="{x:Static model:PictureAlign.AlignLeft}"/>
+            <Button Width="30" Height="30" ToolTip="水平居中" Command="{Binding AlignCommand,Mode=OneTime}" CommandParameter="{x:Static model:PictureAlign.AlignHorizontalCenter}"/>
+            <Button Width="30" Height="30" ToolTip="右对齐" Command="{Binding AlignCommand,Mode=OneTime}" CommandParameter="{x:Static model:PictureAlign.AlignRight}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+            <Button Width="30" Height="30" ToolTip="上对齐" Command="{Binding AlignCommand,Mode=OneTime}" CommandParameter="{x:Static model:PictureAlign.AlignTop}"/>
+            <Button Width="30" Height="30" ToolTip="垂直居中" Command="{Binding AlignCommand,Mode=OneTime}" CommandParameter="{x:Static model:PictureAlign.AlignVerticalCenter}"/>
+            <Button Width="30" Height="30" ToolTip="下对齐" Command="{Binding AlignCommand,Mode=OneTime}" CommandParameter="{x:Static model:PictureAlign.AlignBottom}"/>
+        </StackPanel>
 
         <Button Width="80" Height="30" Content="确定" HorizontalAlignment="Left" Margin="0,20,0,0" IsEnabled="False"/>
     </StackPanel>
