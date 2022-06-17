@@ -54,14 +54,14 @@ namespace PicEditor.View.Control
             halfSize = (int)(size / 2);
             whiteBorder = new Border { BorderBrush = Brushes.White, BorderThickness = new Thickness(1), Background = new SolidColorBrush(Color.FromArgb(1, 0, 0, 0)), Tag = Modes.Default };
             blackBorder = new Rectangle { Stroke = Brushes.Black, StrokeThickness = 1, StrokeDashArray = new DoubleCollection() { 5, 5 } };
-            nwThumb = CreateThumb(Cursors.SizeNWSE, Modes.N | Modes.W);
-            neThumb = CreateThumb(Cursors.SizeNESW, Modes.N | Modes.E);
-            swThumb = CreateThumb(Cursors.SizeNESW, Modes.S | Modes.W);
-            seThumb = CreateThumb(Cursors.SizeNWSE, Modes.S | Modes.E);
-            nThumb = CreateThumb(Cursors.SizeNS, Modes.N);
-            sThumb = CreateThumb(Cursors.SizeNS, Modes.S);
-            wThumb = CreateThumb(Cursors.SizeWE, Modes.W);
-            eThumb = CreateThumb(Cursors.SizeWE, Modes.E);
+            nwThumb = CreateThumb(Modes.N | Modes.W);
+            neThumb = CreateThumb(Modes.N | Modes.E);
+            swThumb = CreateThumb(Modes.S | Modes.W);
+            seThumb = CreateThumb(Modes.S | Modes.E);
+            nThumb = CreateThumb(Modes.N);
+            sThumb = CreateThumb(Modes.S);
+            wThumb = CreateThumb(Modes.W);
+            eThumb = CreateThumb(Modes.E);
             Children.Add(whiteBorder);
             Children.Add(blackBorder);
             Children.Add(nwThumb);
@@ -158,10 +158,27 @@ namespace PicEditor.View.Control
         private Point startPoint = new(0, 0);
         private bool keptRatio = true; // 是否已经保持了宽高比例
 
-        private enum Modes { Default = 0x00, N = 0x01, S = 0x02, W = 0x04, E = 0x08 }
+        private enum Modes { Default = 0x0, N = 0x1, S = 0x2, W = 0x4, E = 0x8 }
 
-        private static Border CreateThumb(Cursor cursor, Modes tag)
+        private static Border CreateThumb(Modes mode)
         {
+            Cursor cursor = Cursors.Arrow;
+            if (mode == (Modes.N | Modes.W) || mode == (Modes.S | Modes.E))
+            {
+                cursor = Cursors.SizeNWSE;
+            }
+            else if (mode == (Modes.N | Modes.E) || mode == (Modes.S | Modes.W))
+            {
+                cursor = Cursors.SizeNESW;
+            }
+            else if (mode == Modes.N || mode == Modes.S)
+            {
+                cursor = Cursors.SizeNS;
+            }
+            else if (mode == Modes.W || mode == Modes.E)
+            {
+                cursor = Cursors.SizeWE;
+            }
             return new Border
             {
                 Width = size,
@@ -170,7 +187,7 @@ namespace PicEditor.View.Control
                 BorderBrush = Brushes.Black,
                 BorderThickness = new Thickness(1),
                 Cursor = cursor,
-                Tag = tag
+                Tag = mode
             };
         }
 

@@ -18,6 +18,8 @@ namespace PicEditor.Model.PictureInfo
         private double realHeight = 0;
         private double whRatio = 0;
         private bool isKeepRatio = true;
+        private PictureRotate rotate = PictureRotate.None;
+        private PictureMirror mirror = PictureMirror.None;
 
         public double RealLeft
         {
@@ -55,6 +57,18 @@ namespace PicEditor.Model.PictureInfo
             set => SetProperty(ref isKeepRatio, value);
         }
 
+        public PictureRotate Rotate
+        {
+            get => rotate;
+            set => SetProperty(ref rotate, value);
+        }
+
+        public PictureMirror Mirror
+        {
+            get => mirror;
+            set => SetProperty(ref mirror, value);
+        }
+
         public void InitData(int width, int height)
         {
             SetProperty(ref realLeft, 0, nameof(RealLeft));
@@ -62,6 +76,8 @@ namespace PicEditor.Model.PictureInfo
             SetProperty(ref realWidth, width, nameof(RealWidth));
             SetProperty(ref realHeight, height, nameof(RealHeight));
             SetProperty(ref isKeepRatio, true, nameof(IsKeepRatio));
+            SetProperty(ref rotate, PictureRotate.None);
+            SetProperty(ref mirror, PictureMirror.None);
             if (RealHeight == 0)
             {
                 LogUtil.Log.Error(new Exception("图片高度为0"), "RealHeight为0");

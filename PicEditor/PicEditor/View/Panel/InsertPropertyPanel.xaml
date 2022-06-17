@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:PicEditor.View.Panel"
              xmlns:vm="clr-namespace:PicEditor.ViewModel"
              xmlns:basicControl="clr-namespace:PicEditor.Basic.Control;assembly=PicEditor.Basic"
+             xmlns:model="clr-namespace:PicEditor.Model.PictureInfo"
              DataContext="{x:Static vm:VmLocator.InsertPicture}"
              Background="{StaticResource ThemeColor}">
     <StackPanel Margin="10,8,10,0" HorizontalAlignment="Left">
@@ -20,6 +21,12 @@
             <basicControl:NumberTextBox x:Name="widthTextBox" x:FieldModifier="private" Header="宽" Width="78" TextChanged="Width_Changed"/>
             <basicControl:NumberTextBox x:Name="heightTextBox" x:FieldModifier="private" Header="高" Width="78" TextChanged="Height_Changed" Margin="8,0,0,0"/>
             <CheckBox Margin="5,0,0,0" x:Name="isKeepRatio" x:FieldModifier="private" IsChecked="{Binding Position.IsKeepRatio,Mode=TwoWay}" ToolTip="保持比例" Style="{StaticResource KeepRatioCheckBoxStyle}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+            <Button Width="30" Height="30" ToolTip="向左旋转" Command="{Binding RotateCommand,Mode=OneTime}" CommandParameter="{x:Static model:PictureRotate.RotateLeft}"/>
+            <Button Width="30" Height="30" ToolTip="向右旋转" Command="{Binding RotateCommand,Mode=OneTime}" CommandParameter="{x:Static model:PictureRotate.RotateRight}"/>
+            <Button Width="30" Height="30" ToolTip="水平镜像" Command="{Binding MirrorCommand,Mode=OneTime}" CommandParameter="{x:Static model:PictureMirror.MirrorHorizontal}"/>
+            <Button Width="30" Height="30" ToolTip="垂直镜像" Command="{Binding MirrorCommand,Mode=OneTime}" CommandParameter="{x:Static model:PictureMirror.MirrorVertical}"/>
         </StackPanel>
 
         <Button Width="80" Height="30" Content="确定" HorizontalAlignment="Left" Margin="0,20,0,0" IsEnabled="False"/>

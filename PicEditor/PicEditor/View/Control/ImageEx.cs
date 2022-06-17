@@ -1,6 +1,7 @@
 ﻿using PicEditor.Basic.Util;
 using PicEditor.Interface;
 using PicEditor.Layer;
+using PicEditor.Model.PictureInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,18 @@ namespace PicEditor.View.Control
             set => SetValue(RealHeightProperty, value);
         }
 
+        public PictureRotate Rotate
+        {
+            get => (PictureRotate)GetValue(RotateProperty);
+            set => SetValue(RotateProperty, value);
+        }
+
+        public PictureMirror Mirror
+        {
+            get => (PictureMirror)GetValue(MirrorProperty);
+            set => SetValue(MirrorProperty, value);
+        }
+
         public ImageEx(string id, WriteableBitmap bitmap, bool isAutoScaleMode = true)
         {
             this.id = id;
@@ -83,11 +96,7 @@ namespace PicEditor.View.Control
 
         public VisualBrush GetVisualBrush()
         {
-            VisualBrush brush = new()
-            {
-                Visual = image
-            };
-            return brush;
+            return new VisualBrush { Visual = this };
         }
 
         public void SetAutoScaleMode()
@@ -186,11 +195,45 @@ namespace PicEditor.View.Control
             }
         }
 
+        private static void RotateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ImageEx self && self != null && e.NewValue is PictureRotate rotate && rotate != PictureRotate.None)
+            {
+                WriteableBitmap bitmap = (WriteableBitmap)self.image.Source;
+                self.image.Source = null;
+                bitmap = BitmapUtil.Rotate(bitmap, rotate == PictureRotate.RotateLeft ? -90 : 90);
+                self.image.Source = bitmap;
+                GC.Collect();
+                self.Dispatcher.BeginInvoke(() =>
+                {
+                    self.Rotate = PictureRotate.None;
+                });
+            }
+        }
+
+        private static void MirrorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ImageEx self && self != null && e.NewValue is PictureMirror mirror && mirror != PictureMirror.None)
+            {
+                WriteableBitmap bitmap = (WriteableBitmap)self.image.Source;
+                self.image.Source = null;
+                BitmapUtil.Mirror(bitmap, mirror == PictureMirror.MirrorHorizontal ? 1 : 2);
+                self.image.Source = bitmap;
+                GC.Collect();
+                self.Dispatcher.BeginInvoke(() =>
+                {
+                    self.Mirror = PictureMirror.None;
+                });
+            }
+        }
+
         public static readonly DependencyProperty CanvasSizeProperty = DependencyProperty.Register("CanvasSize", typeof(Size), typeof(ImageEx), new PropertyMetadata(new Size(0, 0), new PropertyChangedCallback(CanvasSizeChanged)));
         public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register("Scale", typeof(double), typeof(ImageEx), new PropertyMetadata(0d, new PropertyChangedCallback(ScaleChanged)));
         public static readonly DependencyProperty RealLeftProperty = DependencyProperty.Register("RealLeft", typeof(double), typeof(ImageEx), new PropertyMetadata(0d, new PropertyChangedCallback(RealLeftChanged)));
         public static readonly DependencyProperty RealTopProperty = DependencyProperty.Register("RealTop", typeof(double), typeof(ImageEx), new PropertyMetadata(0d, new PropertyChangedCallback(RealTopChanged)));
         public static readonly DependencyProperty RealWidthProperty = DependencyProperty.Register("RealWidth", typeof(double), typeof(ImageEx), new PropertyMetadata(0d, new PropertyChangedCallback(RealWidthChanged)));
         public static readonly DependencyProperty RealHeightProperty = DependencyProperty.Register("RealHeight", typeof(double), typeof(ImageEx), new PropertyMetadata(0d, new PropertyChangedCallback(RealHeightChanged)));
+        public static readonly DependencyProperty RotateProperty = DependencyProperty.Register("Rotate", typeof(PictureRotate), typeof(ImageEx), new PropertyMetadata(PictureRotate.None, new PropertyChangedCallback(RotateChanged)));
+        public static readonly DependencyProperty MirrorProperty = DependencyProperty.Register("Mirror", typeof(PictureMirror), typeof(ImageEx), new PropertyMetadata(PictureMirror.None, new PropertyChangedCallback(MirrorChanged)));
     }
 }

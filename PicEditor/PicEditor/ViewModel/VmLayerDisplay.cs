@@ -84,6 +84,8 @@ namespace PicEditor.ViewModel
                 image.SetBinding(ImageEx.RealTopProperty, new Binding("RealTop") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
                 image.SetBinding(ImageEx.RealWidthProperty, new Binding("RealWidth") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
                 image.SetBinding(ImageEx.RealHeightProperty, new Binding("RealHeight") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
+                image.SetBinding(ImageEx.RotateProperty, new Binding("Rotate") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
+                image.SetBinding(ImageEx.MirrorProperty, new Binding("Mirror") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
 
                 insertPicture?.InitData(bitmap.PixelWidth, bitmap.PixelHeight);
                 selector.Visibility = Visibility.Visible;
