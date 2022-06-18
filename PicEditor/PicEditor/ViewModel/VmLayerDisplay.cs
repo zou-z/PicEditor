@@ -62,22 +62,22 @@ namespace PicEditor.ViewModel
             // 插入图片
             if (isInsertPicture)
             {
-                RectSelector selector;
+                InsertPictureBox insertBox;
                 if (UpperLayers.Count == 0)
                 {
-                    selector = new RectSelector();
-                    selector.SetBinding(RectSelector.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });
-                    selector.SetBinding(RectSelector.RealLeftProperty, new Binding("RealLeft") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
-                    selector.SetBinding(RectSelector.RealTopProperty, new Binding("RealTop") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
-                    selector.SetBinding(RectSelector.RealWidthProperty, new Binding("RealWidth") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
-                    selector.SetBinding(RectSelector.RealHeightProperty, new Binding("RealHeight") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
-                    selector.SetBinding(RectSelector.WhRatioProperty, new Binding("WhRatio") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
-                    selector.SetBinding(RectSelector.IsKeepRatioProperty, new Binding("IsKeepRatio") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
-                    UpperLayers.Add(selector);
+                    insertBox = new InsertPictureBox();
+                    insertBox.SetBinding(RectSelectorBase.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });
+                    insertBox.SetBinding(RectSelectorBase.RealLeftProperty, new Binding("RealLeft") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
+                    insertBox.SetBinding(RectSelectorBase.RealTopProperty, new Binding("RealTop") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
+                    insertBox.SetBinding(RectSelectorBase.RealWidthProperty, new Binding("RealWidth") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
+                    insertBox.SetBinding(RectSelectorBase.RealHeightProperty, new Binding("RealHeight") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
+                    insertBox.SetBinding(InsertPictureBox.WhRatioProperty, new Binding("WhRatio") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
+                    insertBox.SetBinding(InsertPictureBox.IsKeepRatioProperty, new Binding("IsKeepRatio") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
+                    UpperLayers.Add(insertBox);
                 }
                 else
                 {
-                    selector = (RectSelector)UpperLayers[0];
+                    insertBox = (InsertPictureBox)UpperLayers[0];
                 }
 
                 image.SetBinding(ImageEx.RealLeftProperty, new Binding("RealLeft") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
@@ -88,7 +88,7 @@ namespace PicEditor.ViewModel
                 image.SetBinding(ImageEx.MirrorProperty, new Binding("Mirror") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
 
                 insertPicture?.InitData(bitmap.PixelWidth, bitmap.PixelHeight);
-                selector.Visibility = Visibility.Visible;
+                insertBox.Visibility = Visibility.Visible;
             }
         }
 
