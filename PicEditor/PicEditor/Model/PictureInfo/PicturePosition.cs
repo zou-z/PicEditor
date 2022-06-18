@@ -16,6 +16,8 @@ namespace PicEditor.Model.PictureInfo
         private double realTop = 0;
         private double realWidth = 0;
         private double realHeight = 0;
+        private int initialWidth = 0;
+        private int initialHeight = 0;
         private double whRatio = 0;
         private bool isKeepRatio = true;
         private PictureRotate rotate = PictureRotate.None;
@@ -36,14 +38,18 @@ namespace PicEditor.Model.PictureInfo
         public double RealWidth
         {
             get => realWidth;
-            set => SetProperty(ref realWidth, (int)value);
+            set => SetProperty(ref realWidth, (int)(value < 1 ? 1 : value));
         }
 
         public double RealHeight
         {
             get => realHeight;
-            set => SetProperty(ref realHeight, (int)value);
+            set => SetProperty(ref realHeight, (int)(value < 1 ? 1 : value));
         }
+
+        public int InitialWidth => initialWidth;
+
+        public int InitialHeight => initialHeight;
 
         public double WhRatio
         {
@@ -75,6 +81,8 @@ namespace PicEditor.Model.PictureInfo
             SetProperty(ref realTop, 0, nameof(RealTop));
             SetProperty(ref realWidth, width, nameof(RealWidth));
             SetProperty(ref realHeight, height, nameof(RealHeight));
+            SetProperty(ref initialWidth, width, nameof(InitialWidth));
+            SetProperty(ref initialHeight, height, nameof(InitialHeight));
             SetProperty(ref isKeepRatio, true, nameof(IsKeepRatio));
             SetProperty(ref rotate, PictureRotate.None);
             SetProperty(ref mirror, PictureMirror.None);

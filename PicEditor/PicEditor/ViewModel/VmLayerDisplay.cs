@@ -54,7 +54,7 @@ namespace PicEditor.ViewModel
             PictureLayers.Add(image);
 
             layerManage?.AddLayer(image.GetID(), image.GetVisualBrush(), isInit);
-            layerManage?.SetLayerSize(image.GetID(), bitmap.PixelWidth, bitmap.PixelHeight);
+            layerManage?.SetLayerSize(image.GetID(), (int)LayerInfo.CanvasSize.Width, (int)LayerInfo.CanvasSize.Height);
 
             image.SetBinding(ImageEx.CanvasSizeProperty, new Binding("CanvasSize") { Source = LayerInfo, Mode = BindingMode.OneWay });
             image.SetBinding(ImageEx.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });

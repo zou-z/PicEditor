@@ -11,6 +11,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Style/StyleConfig.xaml"/>
                 <ResourceDictionary Source="Style/ScrollViewer.xaml"/>
+                <ResourceDictionary Source="Style/Button.xaml"/>
                 <ResourceDictionary Source="Style/CheckBox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

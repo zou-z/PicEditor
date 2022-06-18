@@ -37,6 +37,7 @@
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="BorderThickness" Value="1.5"/>
             <Setter Property="InputMethod.IsInputMethodEnabled" Value="False"/>
+            <Setter Property="Cursor" Value="Arrow"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
             <Setter Property="Template">
@@ -44,7 +45,7 @@
                     <ControlTemplate TargetType="{x:Type TextBox}">
                         <Border CornerRadius="4" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                             <DockPanel>
-                                <TextBlock DockPanel.Dock="Left" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Header,Mode=OneWay}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                <TextBlock DockPanel.Dock="Left" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Header,Mode=OneWay}" Foreground="Gray" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                 <StackPanel DockPanel.Dock="Right" x:Name="Panel" Visibility="Hidden" VerticalAlignment="Center">
                                     <Button Content="&#xE010;" Click="Enlarge_Click"/>
                                     <Button Content="&#xE011;" Click="Reduce_Click"/>
@@ -60,6 +61,7 @@
                             <Trigger Property="IsFocused" Value="True">
                                 <Setter Property="BorderBrush" Value="Silver"/>
                                 <Setter TargetName="Panel" Property="Visibility" Value="Visible"/>
+                                <Setter Property="Cursor" Value="IBeam"/>
                             </Trigger>
                             <Trigger Property="Validation.HasError" Value="True">
                                 <Setter Property="BorderBrush" Value="Red"/>

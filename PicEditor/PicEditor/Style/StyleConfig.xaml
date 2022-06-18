@@ -1,4 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <SolidColorBrush x:Key="ThemeColor" Color="#333436"/>
+    <SolidColorBrush x:Key="ThemeLightColor" Color="LightSkyBlue"/>
+    <SolidColorBrush x:Key="ThemeDarkColor" Color="#002FA7"/>
+
+    <!--亮钢兰色：#B0C4DE-->
 </ResourceDictionary>
