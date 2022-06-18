@@ -114,6 +114,10 @@ namespace PicEditor.View.Control
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
+            if (Mouse.Captured is ContextMenu)
+            {
+                return;
+            }
             base.OnMouseLeave(e);
             Canvas_MouseLeftButtonUp(this, null);
         }

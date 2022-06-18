@@ -105,9 +105,17 @@ namespace PicEditor.View.Control
             AutoScaleMode();
         }
 
+        // 禁止点击左键时滚动条自动移动
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseLeftButtonDown(e);
+            e.Handled = true;
+        }
+
+        // 禁止点击右键时滚动条自动移动
+        protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnPreviewMouseRightButtonDown(e);
             e.Handled = true;
         }
 

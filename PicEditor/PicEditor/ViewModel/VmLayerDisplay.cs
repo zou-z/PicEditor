@@ -73,6 +73,9 @@ namespace PicEditor.ViewModel
                     insertBox.SetBinding(RectSelectorBase.RealHeightProperty, new Binding("RealHeight") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
                     insertBox.SetBinding(InsertPictureBox.WhRatioProperty, new Binding("WhRatio") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
                     insertBox.SetBinding(InsertPictureBox.IsKeepRatioProperty, new Binding("IsKeepRatio") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.OneWay });
+                    insertBox.SetBinding(InsertPictureBox.RotateProperty, new Binding("RotateCommand") { Source = insertPicture, Mode = BindingMode.OneTime });
+                    insertBox.SetBinding(InsertPictureBox.MirrorProperty, new Binding("MirrorCommand") { Source = insertPicture, Mode = BindingMode.OneTime });
+                    insertBox.SetBinding(InsertPictureBox.AlignProperty, new Binding("AlignCommand") { Source = insertPicture, Mode = BindingMode.OneTime });
                     UpperLayers.Add(insertBox);
                 }
                 else

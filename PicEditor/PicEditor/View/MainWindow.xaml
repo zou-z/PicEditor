@@ -30,30 +30,28 @@
         </Menu>
         <DockPanel>
             <panel:EditModePanel DockPanel.Dock="Left" Width="50"/>
-            <Grid DockPanel.Dock="Right" Width="200" Background="AliceBlue">
+            <Grid DockPanel.Dock="Right" Width="200">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Row="0">
                     <control:ScaleSlider Width="150" Scale="{Binding Source={x:Static vm:VmLocator.LayerDisplay},Path=LayerInfo.Scale,Mode=TwoWay}"/>
                     <TextBlock Text="{Binding Source={x:Static vm:VmLocator.LayerDisplay},Path=LayerInfo.Scale,Mode=OneWay,StringFormat={}{0:F2}}"/>
                 </StackPanel>
-                <Grid Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <control:TreeViewEx Grid.Row="0"/>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <DockPanel Grid.Row="1" Background="{StaticResource ThemeColor}">
+                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Width="60" Height="30" Content="新建组" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=AddLayerGroupCommand,Mode=OneTime}"/>
                         <Button Width="60" Height="30" Content="新建图层" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=AddLayerPictureCommand,Mode=OneTime}"/>
                         <Button Width="60" Height="30" Content="删除图层" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=DeleteCommand,Mode=OneTime}"/>
                     </StackPanel>
-                </Grid>
-                <panel:PropertyPanel Grid.Row="2" IsEnabled="False" SelectedMode="{Binding Source={x:Static vm:VmLocator.EditMode},Path=SelectedMode,Mode=OneWay}"/>
-                <panel:InsertPropertyPanel Grid.Row="2"/>
+                    <control:TreeViewEx/>
+                </DockPanel>
+                <GridSplitter Grid.Row="2" Height="2" HorizontalAlignment="Stretch"/>
+                <panel:PropertyPanel Grid.Row="3" IsEnabled="False" SelectedMode="{Binding Source={x:Static vm:VmLocator.EditMode},Path=SelectedMode,Mode=OneWay}"/>
+                <panel:InsertPropertyPanel Grid.Row="3"/>
             </Grid>
 
             <layer:LayerPanel CanvasMargin="100"

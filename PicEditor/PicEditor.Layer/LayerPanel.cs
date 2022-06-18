@@ -75,6 +75,7 @@ namespace PicEditor.Layer
             Loaded += LayerPanel_Loaded;
             Canvas.SetLeft(squareBackground, 0.5);
             Canvas.SetTop(squareBackground, 0.5);
+            CanContentScroll = false;
             FocusVisualStyle = null;
         }
         #endregion

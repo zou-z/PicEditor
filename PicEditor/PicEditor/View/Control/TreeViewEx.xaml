@@ -22,11 +22,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="CheckBox">
                         <Border Background="{StaticResource AlmostTransparentColor}">
-                            <Path x:Name="EyePath" Width="20" Height="20" Fill="DimGray" Stretch="Uniform">
-                                <Path.Data>
-                                    M512.182857 849.481143c302.738286 0 511.817143-244.662857 511.817143-321.097143 0-76.818286-209.444571-321.097143-511.817143-321.097143C213.577143 207.268571 0 451.547429 0 528.365714c0 76.434286 213.193143 321.097143 512.182857 321.097143z m0-59.209143c-246.528 0-446.610286-209.078857-446.610286-261.906286 0-44.580571 200.082286-261.888 446.610286-261.888 245.796571 0 446.244571 217.307429 446.244572 261.888 0 52.845714-200.448 261.906286-446.244572 261.906286z m0-52.077714c116.534857 0 210.194286-95.542857 210.194286-209.828572 0-117.266286-93.659429-209.810286-210.194286-209.810285-117.266286 0-211.309714 92.525714-210.56 209.810285 0.365714 114.285714 93.293714 209.828571 210.56 209.828572z m0-140.123429c-38.948571 0-70.436571-31.488-70.436571-69.705143 0-38.582857 31.469714-69.668571 70.436571-69.668571 38.582857 0 70.070857 31.085714 70.070857 69.668571 0 38.217143-31.469714 69.705143-70.070857 69.705143z
-                                </Path.Data>
-                            </Path>
+                            <Path x:Name="EyePath" Width="20" Height="20" Fill="DimGray" Stretch="Uniform" Data="{StaticResource IconEye}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
@@ -128,11 +124,7 @@
                                                 <ToggleButton DockPanel.Dock="Left" x:Name="Expander" Visibility="Collapsed" ClickMode="Press" Focusable="True"
                                                           IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
                                                           Style="{StaticResource ExpanderButtonStyle}"/>
-                                                <Path x:Name="GroupIcon" Width="16" Height="30" Margin="3,0,0,0" Stretch="Uniform" Fill="Gainsboro" Visibility="Collapsed">
-                                                    <Path.Data>
-                                                        M880 298.4H521L403.7 186.2c-1.5-1.4-3.5-2.2-5.5-2.2H144c-17.7 0-32 14.3-32 32v592c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V330.4c0-17.7-14.3-32-32-32zM840 768H184V256h188.5l119.6 114.4H840V768z
-                                                    </Path.Data>
-                                                </Path>
+                                                <Path x:Name="GroupIcon" Width="16" Height="30" Margin="3,0,0,0" Stretch="Uniform" Fill="Gainsboro" Visibility="Collapsed" Data="{StaticResource IconGroup}"/>
                                                 <Border DockPanel.Dock="Left" x:Name="Thumbnail" Visibility="Collapsed" Width="{Binding ThumbnailWidth,Mode=OneTime}" Height="{Binding ThumbnailWidth,Mode=OneTime}" BorderBrush="Gainsboro" BorderThickness="1">
                                                     <Border x:Name="Picture" Height="{Binding ThumbnailHeight,Mode=OneWay}" RenderOptions.BitmapScalingMode="LowQuality" SnapsToDevicePixels="False"/>
                                                 </Border>
