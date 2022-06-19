@@ -1,4 +1,4 @@
-﻿using PicEditor.Model.PictureInfo;
+﻿using PicEditor.Model.PictureData;
 using PicEditor.ViewModel;
 using System;
 using System.Collections.Generic;

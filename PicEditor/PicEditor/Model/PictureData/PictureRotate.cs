@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PicEditor.Model.PictureInfo
+namespace PicEditor.Model.PictureData
 {
-    internal enum PictureSourceType
+    internal enum PictureRotate
     {
-        LocalFile,
-        NetworkLink,
-        Clipboard,
+        None,
+        RotateLeft,
+        RotateRight,
     }
 }

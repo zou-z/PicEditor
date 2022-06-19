@@ -12,12 +12,23 @@ namespace PicEditor.Converter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values != null && values.Length >= 2)
+            if (values != null)
             {
-                if (values[0] is bool b1 && values[1] is bool b2)
+                foreach (object value in values)
                 {
-                    return b1 && b2;
+                    if (value is bool b)
+                    {
+                        if (!b)
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
                 }
+                return true;
             }
             throw new NotImplementedException();
         }

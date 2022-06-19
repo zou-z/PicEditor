@@ -14,22 +14,23 @@
         <Menu DockPanel.Dock="Top" Height="30">
             <MenuItem Header="文件">
                 <MenuItem Header="打开">
-                    <MenuItem Header="本地图片" Command="{Binding Source={x:Static vm:VmLocator.File},Path=OpenFileCommand,Mode=OneTime}" CommandParameter="Open"/>
+                    <MenuItem Header="本地图片" Command="{Binding Source={x:Static vm:VmLocator.File},Path=OpenFileCommand,Mode=OneTime}">
+                        <MenuItem.IsEnabled>
+                            <MultiBinding Converter="{StaticResource openPictureConverter}">
+                                <Binding Source="{x:Static vm:VmLocator.File}" Path="Status.IsPictureOpened" Mode="OneWay"/>
+                                <Binding Source="{x:Static vm:VmLocator.File}" Path="Status.IsFunctionOn" Mode="OneWay"/>
+                            </MultiBinding>
+                        </MenuItem.IsEnabled>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="插入">
-                    <MenuItem Header="本地图片" Command="{Binding Source={x:Static vm:VmLocator.File},Path=OpenFileCommand,Mode=OneTime}"/>
+                    <MenuItem Header="本地图片" Command="{Binding Source={x:Static vm:VmLocator.File},Path=OpenFileCommand,Mode=OneTime}" IsEnabled="{Binding Source={x:Static vm:VmLocator.File},Path=Status.IsFunctionOn,Mode=OneWay}"/>
                 </MenuItem>
                 <MenuItem Header="退出"/>
             </MenuItem>
-            <MenuItem Header="item1">
-            </MenuItem>
-            <MenuItem Header="item2">
-            </MenuItem>
-            <MenuItem Header="item3">
-            </MenuItem>
         </Menu>
         <DockPanel>
-            <panel:EditModePanel DockPanel.Dock="Left" Width="50"/>
+            <panel:EditModePanel DockPanel.Dock="Left" Width="50" IsEnabled="{Binding Source={x:Static vm:VmLocator.File},Path=Status.IsFunctionOn,Mode=OneWay}"/>
             <Grid DockPanel.Dock="Right" Width="200">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -50,8 +51,8 @@
                     <control:TreeViewEx/>
                 </DockPanel>
                 <GridSplitter Grid.Row="2" Height="2" HorizontalAlignment="Stretch"/>
-                <panel:PropertyPanel Grid.Row="3" IsEnabled="False" SelectedMode="{Binding Source={x:Static vm:VmLocator.EditMode},Path=SelectedMode,Mode=OneWay}"/>
-                <panel:InsertPropertyPanel Grid.Row="3"/>
+                <panel:PropertyPanel Grid.Row="3" IsEnabled="{Binding Source={x:Static vm:VmLocator.File},Path=Status.IsFunctionOn,Mode=OneWay}" SelectedMode="{Binding Source={x:Static vm:VmLocator.EditMode},Path=SelectedMode,Mode=OneWay}"/>
+                <panel:InsertPropertyPanel Grid.Row="3" Visibility="{Binding Source={x:Static vm:VmLocator.File},Path=Status.IsInsertingPicture,Mode=OneWay,Converter={StaticResource boolVisibilityConverter}}"/>
             </Grid>
 
             <layer:LayerPanel CanvasMargin="100"
@@ -62,7 +63,7 @@
                 <layer:LayerPanel.IsCanvasMoveEnabled>
                     <MultiBinding Converter="{StaticResource multiBoolConverter}">
                         <Binding Source="{x:Static vm:VmLocator.EditMode}" Path="IsCanvasMoveEnabled" Mode="OneWay"/>
-                        <Binding Source="{x:Static vm:VmLocator.File}" Path="IsFunctionOn" Mode="OneWay"/>
+                        <Binding Source="{x:Static vm:VmLocator.File}" Path="Status.IsFunctionOn" Mode="OneWay"/>
                     </MultiBinding>
                 </layer:LayerPanel.IsCanvasMoveEnabled>
             </layer:LayerPanel>

@@ -8,6 +8,8 @@
         <ResourceDictionary>
             <converter:LeftToMarginConverter x:Key="leftToMarginConverter"/>
             <converter:MultiBoolConverter x:Key="multiBoolConverter"/>
+            <converter:OpenPictureConverter x:Key="openPictureConverter"/>
+            <converter:BoolVisibilityConverter x:Key="boolVisibilityConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Style/StyleConfig.xaml"/>
                 <ResourceDictionary Source="Style/IconResource.xaml"/>

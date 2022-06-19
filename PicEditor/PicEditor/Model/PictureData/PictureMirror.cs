@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PicEditor.Model.PictureInfo
+namespace PicEditor.Model.PictureData
 {
-    internal enum PictureRotate
+    internal enum PictureMirror
     {
         None,
-        RotateLeft,
-        RotateRight,
+        MirrorHorizontal,
+        MirrorVertical,
     }
 }

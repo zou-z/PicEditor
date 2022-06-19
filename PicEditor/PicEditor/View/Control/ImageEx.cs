@@ -1,7 +1,7 @@
 ﻿using PicEditor.Basic.Util;
 using PicEditor.Interface;
 using PicEditor.Layer;
-using PicEditor.Model.PictureInfo;
+using PicEditor.Model.PictureData;
 using System;
 using System.Collections.Generic;
 using System.Linq;

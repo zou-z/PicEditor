@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace PicEditor.Model.PictureInfo
+namespace PicEditor.Model.PictureData
 {
     internal class PictureSourceInfo : ObservableObject
     {

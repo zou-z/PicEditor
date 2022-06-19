@@ -5,7 +5,7 @@ using Microsoft.Win32;
 using PicEditor.Basic.Util;
 using PicEditor.Interface;
 using PicEditor.Model;
-using PicEditor.Model.PictureInfo;
+using PicEditor.Model.PictureData;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,22 +16,18 @@ using System.Windows.Media.Imaging;
 
 namespace PicEditor.ViewModel
 {
-    internal class VmFile : ObservableObject
+    internal class VmFile
     {
         private IPictureSource? pictureSource = null;
+        private PictureStatus? status = null;
         private PictureSourceInfo? pictureSourceInfo = null;
         private RelayCommand<string>? openFileCommand = null; // openLink,openClipboard, drag in
-        private bool isFunctionOn = false;
+
+        public PictureStatus Status => status ??= new PictureStatus();
 
         public PictureSourceInfo PictureSourceInfo => pictureSourceInfo ??= new PictureSourceInfo();
 
         public RelayCommand<string> OpenFileCommand => openFileCommand ??= new RelayCommand<string>(OpenFile);
-
-        public bool IsFunctionOn
-        {
-            get => isFunctionOn;
-            set => SetProperty(ref isFunctionOn, value);
-        }
 
         public void Initialize(IPictureSource? pictureSource)
         {
@@ -54,15 +50,17 @@ namespace PicEditor.ViewModel
                 else
                 {
                     var bitmap = FileUtil.ReadLocalFile(dialog.FileName);
-                    pictureSource?.AddPictureSource(bitmap, GetIsInit(mode));
+                    pictureSource?.AddPictureSource(bitmap, !Status.IsPictureOpened);
                 }
-                IsFunctionOn = GetIsInit(mode);
+                if (Status.IsPictureOpened)
+                {
+                    Status.IsInsertingPicture = true;
+                }
+                else
+                {
+                    Status.IsPictureOpened = Status.IsFunctionOn = true;
+                }
             }
-        }
-
-        private static bool GetIsInit(string? mode)
-        {
-            return mode == "Open";
         }
     }
 }
