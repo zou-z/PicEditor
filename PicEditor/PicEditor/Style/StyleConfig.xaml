@@ -1,7 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <SolidColorBrush x:Key="ThemeColor" Color="#333436"/>
+    <SolidColorBrush x:Key="ThemeBackgroundColor" Color="#434446"/>
+    <SolidColorBrush x:Key="ThemeHoverColor" Color="#404143"/>
+    <SolidColorBrush x:Key="ThemePressedColor" Color="#3D3E40"/>
+    
     <SolidColorBrush x:Key="ThemeLightColor" Color="LightSkyBlue"/>
+    <SolidColorBrush x:Key="ThemeLightHoverColor" Color="#77BEEA"/>
+    <SolidColorBrush x:Key="ThemeLightPressedColor" Color="#67AEDA"/>
+    
     <SolidColorBrush x:Key="ThemeDarkColor" Color="#002FA7"/>
 
     <!--亮钢兰色：#B0C4DE-->

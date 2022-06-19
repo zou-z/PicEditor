@@ -11,11 +11,13 @@ namespace PicEditor.ViewModel
 {
     internal class VmInsertPicture : IInsertPicture
     {
+        private string id = string.Empty;
         private ICanvas? canvas = null;
         private PicturePosition? picturePosition = null;
         private RelayCommand<PictureRotate>? rotateCommand = null;
         private RelayCommand<PictureMirror>? mirrorCommand = null;
         private RelayCommand<PictureAlign>? alignCommand = null;
+        private RelayCommand<bool>? finishCommand = null;
 
         public PicturePosition Position => picturePosition ??= new PicturePosition();
 
@@ -24,6 +26,8 @@ namespace PicEditor.ViewModel
         public RelayCommand<PictureMirror> MirrorCommand => mirrorCommand ??= new RelayCommand<PictureMirror>(Mirror);
 
         public RelayCommand<PictureAlign> AlignCommand => alignCommand ??= new RelayCommand<PictureAlign>(Align);
+
+        public RelayCommand<bool> FinishCommand => finishCommand ??= new RelayCommand<bool>(Finish);
 
         public VmInsertPicture()
         {
@@ -39,8 +43,9 @@ namespace PicEditor.ViewModel
             return Position;
         }
 
-        public void InitData(int width, int height)
+        public void InitData(string id, int width, int height)
         {
+            this.id = id;
             Position.InitData(width, height);
         }
 
@@ -90,6 +95,11 @@ namespace PicEditor.ViewModel
             {
                 Position.RealTop = (canvas.GetCanvasSize().Height - Position.RealHeight) / 2;
             }
+        }
+
+        private void Finish(bool isApply)
+        {
+            canvas?.InsertPicture(id, isApply);
         }
     }
 }

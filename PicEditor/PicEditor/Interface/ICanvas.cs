@@ -10,5 +10,7 @@ namespace PicEditor.Interface
     internal interface ICanvas
     {
         Size GetCanvasSize();
+
+        void InsertPicture(string id, bool isApply);
     }
 }

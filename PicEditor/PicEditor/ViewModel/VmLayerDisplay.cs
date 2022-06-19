@@ -92,9 +92,33 @@ namespace PicEditor.ViewModel
                 image.SetBinding(ImageEx.RotateProperty, new Binding("Rotate") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
                 image.SetBinding(ImageEx.MirrorProperty, new Binding("Mirror") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
 
-                insertPicture?.InitData(bitmap.PixelWidth, bitmap.PixelHeight);
+                insertPicture?.InitData(image.GetID(), bitmap.PixelWidth, bitmap.PixelHeight);
                 insertBox.Visibility = Visibility.Visible;
             }
+        }
+
+        public void InsertPicture(string id, bool isApply)
+        {
+            ImageEx? image = null;
+            for (int i = 0; i < PictureLayers.Count; ++i)
+            {
+                if (pictureLayers[i] is ImageEx imageEx && imageEx != null && imageEx.GetID() == id)
+                {
+                    image = imageEx;
+                    break;
+                }
+            }
+            if (image == null)
+            {
+                LogUtil.Log.Error(new Exception("插入图片失败"), $"未找到id为{id}的图层");
+                return;
+            }
+
+            // image 
+            // PictureStatus
+
+
+
         }
 
         public void SetLayerVisible(string guid, Visibility visibility)

@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:PicEditor.View.Panel"
              xmlns:vm="clr-namespace:PicEditor.ViewModel"
              xmlns:basicControl="clr-namespace:PicEditor.Basic.Control;assembly=PicEditor.Basic"
-             xmlns:model="clr-namespace:PicEditor.Model.PictureData"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
              DataContext="{x:Static vm:VmLocator.InsertPicture}"
              Background="{StaticResource ThemeColor}">
     <StackPanel Margin="10,8,10,0" HorizontalAlignment="Left">
@@ -34,12 +34,12 @@
         <TextBlock Text="尺寸" Foreground="{StaticResource ThemeLightColor}" Margin="0,8,0,0"/>
         <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
             <basicControl:NumberTextBox x:Name="widthTextBox" x:FieldModifier="private" Header="宽" Width="78" TextChanged="Width_Changed" Cursor="Arrow"/>
-            <basicControl:NumberTextBox x:Name="heightTextBox" x:FieldModifier="private" Header="高" Width="78" TextChanged="Height_Changed" Margin="8,0,0,0"/>
+            <basicControl:NumberTextBox x:Name="heightTextBox" x:FieldModifier="private" Header="高" Width="78" TextChanged="Height_Changed" Margin="8,0,0,0" Cursor="Arrow"/>
             <CheckBox Margin="5,0,0,0" x:Name="isKeepRatio" x:FieldModifier="private" IsChecked="{Binding Position.IsKeepRatio,Mode=TwoWay}" ToolTip="保持比例" Style="{StaticResource KeepRatioCheckBoxStyle}" Cursor="Hand"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Button Width="80" Height="30" Content="确定" HorizontalAlignment="Left" Margin="0,20,0,0" IsEnabled="False"/>
-            <Button Width="80" Height="30" Content="取消" HorizontalAlignment="Left" Margin="0,20,0,0" IsEnabled="False"/>
+            <Button Width="78" Height="30" Content="确定" HorizontalAlignment="Left" Margin="0,20,0,0" Command="{Binding FinishCommand,Mode=OneTime}" CommandParameter="{StaticResource TrueValue}" Style="{StaticResource ThemeLightColorButtonStyle}"/>
+            <Button Width="78" Height="30" Content="取消" HorizontalAlignment="Left" Margin="8,20,0,0" Command="{Binding FinishCommand,Mode=OneTime}" CommandParameter="{StaticResource FalseValue}" Style="{StaticResource ThemeColorButtonStyle}"/>
         </StackPanel>
     </StackPanel>
 </UserControl>

@@ -10,6 +10,6 @@ namespace PicEditor.Interface
     {
         object GetPositionSource();
 
-        void InitData(int width, int height);
+        void InitData(string id, int width, int height);
     }
 }
