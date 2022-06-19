@@ -338,6 +338,22 @@ namespace PicEditor.ViewModel
                 }
                 layerBase = selectedLayer;
             }
+
+            if (layerBase is LayerPicture layerPicture && layerPicture != null && !layerPicture.IsEditEnable)
+            {
+                MessageBox.Show("删除失败，当前图层不可删除");
+                return;
+            }
+            else if(layerBase is LayerGroup layerGroup)
+            {
+                LayerPicture? temp = collectionUtil.FindEditDisabledLayerPicture(layerGroup.Children);
+                if (temp != null)
+                {
+                    MessageBox.Show($"删除失败，当前组含有不可删除的图层：{temp.LayerName}");
+                    return;
+                }
+            }
+
             ObservableCollection<LayerBase>? collection = collectionUtil.FindCollection(Layers, layerBase);
             if (collection == null)
             {
@@ -438,6 +454,19 @@ namespace PicEditor.ViewModel
                     layerBase.LayerName = window.GetResult();
                 }
             }
+        }
+        #endregion
+
+        #region 图层编辑（复制，合并）
+        public void SetLayerEditEnable(string id, bool isEditEnable)
+        {
+            LayerPicture? layerPicture = collectionUtil.FindLayerPicture(Layers, id);
+            if (layerPicture == null)
+            {
+                LogUtil.Log.Error(new Exception("设置图层是否可编辑失败"), $"未找到id为{id}的图层");
+                return;
+            }
+            layerPicture.IsEditEnable = isEditEnable;
         }
         #endregion
 
@@ -580,6 +609,27 @@ namespace PicEditor.ViewModel
                     }
                 }
                 return false;
+            }
+
+            // 找出组内不可编辑的图层
+            public LayerPicture? FindEditDisabledLayerPicture(ObservableCollection<LayerBase> collection)
+            {
+                for (int i = 0; i < collection.Count; ++i)
+                {
+                    if (collection[i] is LayerPicture picture && picture != null && !picture.IsEditEnable)
+                    {
+                        return picture;
+                    }
+                    else if (collection[i] is LayerGroup group && group != null)
+                    {
+                        LayerPicture? layerPicture = FindEditDisabledLayerPicture(group.Children);
+                        if (layerPicture != null)
+                        {
+                            return layerPicture;
+                        }
+                    }
+                }
+                return null;
             }
 
             // 找出图层或组所在的组

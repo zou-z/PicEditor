@@ -18,5 +18,7 @@ namespace PicEditor.Interface
 
         // 设置图层缩略图的尺寸
         void SetLayerSize(string guid, int width, int height);
+
+        void SetLayerEditEnable(string id, bool isEditEnable);
     }
 }

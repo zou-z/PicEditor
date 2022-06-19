@@ -62,6 +62,8 @@ namespace PicEditor.ViewModel
             // 插入图片
             if (isInsertPicture)
             {
+                layerManage?.SetLayerEditEnable(image.GetID(), false);
+
                 InsertPictureBox insertBox;
                 if (UpperLayers.Count == 0)
                 {

@@ -14,6 +14,8 @@ namespace PicEditor.Model.Layer
 
         public string Guid { get; set; } = string.Empty;
 
+        public bool IsEditEnable { get; set; } = true;
+
         public Brush? Thumbnail
         {
             get => thumbnail;
