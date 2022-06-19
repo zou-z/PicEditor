@@ -43,11 +43,19 @@
                     <TextBlock Text="{Binding Source={x:Static vm:VmLocator.LayerDisplay},Path=LayerInfo.Scale,Mode=OneWay,StringFormat={}{0:F2}}"/>
                 </StackPanel>
                 <DockPanel Grid.Row="1" Background="{StaticResource ThemeColor}">
-                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Width="60" Height="30" Content="新建组" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=AddLayerGroupCommand,Mode=OneTime}"/>
-                        <Button Width="60" Height="30" Content="新建图层" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=AddLayerPictureCommand,Mode=OneTime}"/>
-                        <Button Width="60" Height="30" Content="删除图层" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=DeleteCommand,Mode=OneTime}"/>
-                    </StackPanel>
+                    <Border DockPanel.Dock="Bottom" BorderBrush="#4A4A4A" BorderThickness="0,1,0,0" Height="30">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Width="24" Height="24" Style="{StaticResource IconButtonStyle}" ToolTip="新建组" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=AddLayerGroupCommand,Mode=OneTime}" Margin="0,0,2,0">
+                                <Path Width="16" Height="16" Fill="Gray" Stretch="Uniform" Data="{StaticResource IconAddGroup}"/>
+                            </Button>
+                            <Button Width="24" Height="24" Style="{StaticResource IconButtonStyle}" ToolTip="新建图层" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=AddLayerPictureCommand,Mode=OneTime}" Margin="0,0,2,0">
+                                <Path Width="18" Height="18" Fill="Gray" Stretch="Uniform" Data="{StaticResource IconAddLayer}"/>
+                            </Button>
+                            <Button Width="24" Height="24" Style="{StaticResource IconButtonStyle}" ToolTip="删除图层" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=DeleteCommand,Mode=OneTime}" Margin="0,0,2,0">
+                                <Path Width="15" Height="15" Fill="Gray" Stretch="Uniform" Data="{StaticResource IconDelete}"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
                     <control:TreeViewEx/>
                 </DockPanel>
                 <GridSplitter Grid.Row="2" Height="2" HorizontalAlignment="Stretch"/>
