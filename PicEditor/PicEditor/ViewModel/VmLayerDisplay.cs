@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace PicEditor.ViewModel
@@ -115,6 +116,7 @@ namespace PicEditor.ViewModel
             }
 
             // image 
+            image.ApplyMoveAndResize();
             // PictureStatus
 
 
@@ -135,7 +137,7 @@ namespace PicEditor.ViewModel
 
         public void LayerAdded(string guid, string? previousGuid)
         {
-            var bitmap = FileUtil.GetTransparentBitmap((int)LayerInfo.CanvasSize.Width, (int)LayerInfo.CanvasSize.Height);
+            var bitmap = BitmapUtil.GetTransparentBitmap((int)LayerInfo.CanvasSize.Width, (int)LayerInfo.CanvasSize.Height);
             var image = new ImageEx(guid, bitmap);
             image.SetBinding(ImageEx.CanvasSizeProperty, new Binding("CanvasSize") { Source = LayerInfo, Mode = BindingMode.OneWay });
             image.SetBinding(ImageEx.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });

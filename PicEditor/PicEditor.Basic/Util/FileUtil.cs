@@ -41,29 +41,5 @@ namespace PicEditor.Basic.Util
                 throw;
             }
         }
-
-        // 获取透明图像
-        public static WriteableBitmap GetTransparentBitmap(int width, int height)
-        {
-            PixelFormat format = PixelFormats.Bgra32;
-            var bitmap = new WriteableBitmap(width, height, 72, 72, format, null);
-            bitmap.Lock();
-            int stride = width * format.BitsPerPixel / 8;
-            byte[] pixels = new byte[stride * height];
-            //for (int i = 0; i < pixels.Length; ++i)
-            //{
-            //    pixels[i] = (byte)(i % 4 == 3 ? 0 : 255);
-            //}
-            int p = 0;
-            for (int i = 0; i < pixels.Length; ++i)
-            {
-                pixels[i] = (byte)((++p) % 255);
-            }
-            var rect = new Int32Rect(0, 0, width, height);
-            bitmap.WritePixels(rect, pixels, stride, 0);
-            bitmap.AddDirtyRect(rect);
-            bitmap.Unlock();
-            return bitmap;
-        }
     }
 }

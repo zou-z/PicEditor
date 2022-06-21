@@ -104,6 +104,21 @@ namespace PicEditor.View.Control
             isAutoScaleMode = true;
             AutoScaleMode();
         }
+        
+        // 应用移动和缩放
+        public void ApplyMoveAndResize()
+        {
+            BitmapSource bitmapSource = BitmapUtil.Resize((BitmapSource)image.Source, (int)RealWidth, (int)RealHeight);
+            WriteableBitmap bitmap = BitmapUtil.MoveAndResize((int)CanvasSize.Width, (int)CanvasSize.Height, new WriteableBitmap(bitmapSource), (int)RealLeft, (int)RealTop);
+            image.Source = null;
+            image.Source = bitmap;
+            RealLeft = RealTop = 0;
+            RealWidth = CanvasSize.Width;
+            RealHeight = CanvasSize.Height;
+        }
+        
+        // 应用画笔
+        // 应用文本
 
         // 禁止点击左键时滚动条自动移动
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)

@@ -30,7 +30,7 @@ if __name__ == "__main__":
             elif mode == "2":
                 svg = input("请输入SVG文件路径：")
                 if os.path.exists(svg) and os.path.isfile(svg):
-                    with open(svg, "r") as f:
+                    with open(svg, "r", encoding="UTF-8") as f:
                         svg = f.read()
             elif mode == "3":
                 svg = input("请输入SVG文件链接：")
