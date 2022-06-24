@@ -1,0 +1,91 @@
+﻿<DockPanel x:Class="PicEditor.View.Panel.LayerListPanel"
+           x:ClassModifier="internal"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+           xmlns:local="clr-namespace:PicEditor.View.Panel"
+           xmlns:vm="clr-namespace:PicEditor.ViewModel"
+           xmlns:util="clr-namespace:PicEditor.Basic.Util;assembly=PicEditor.Basic"
+           DataContext="{x:Static vm:VmLocator.LayerList}"
+           mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="200">
+    <Border DockPanel.Dock="Bottom" BorderBrush="#4A4A4A" BorderThickness="0,1,0,0" Height="30">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Width="24" Height="24" Style="{StaticResource IconButtonStyle}" ToolTip="新建图层" Command="{Binding AddLayerCommand,Mode=OneTime}" Margin="0,0,2,0">
+                <Path Width="18" Height="18" Fill="Gray" Stretch="Uniform" Data="{StaticResource IconAddLayer}"/>
+            </Button>
+            <Button Width="24" Height="24" Style="{StaticResource IconButtonStyle}" ToolTip="删除图层" Command="{Binding Source={x:Static vm:VmLocator.LayerManage},Path=DeleteCommand,Mode=OneTime}" Margin="0,0,2,0">
+                <Path Width="15" Height="15" Fill="Gray" Stretch="Uniform" Data="{StaticResource IconDelete}"/>
+            </Button>
+        </StackPanel>
+    </Border>
+    <ListBox ItemsSource="{Binding Layers,Mode=OneWay}" SelectedItem="{Binding SelectedLayer,Mode=TwoWay}" util:ListBoxUtil.IsDragEnable="True">
+        <ListBox.Style>
+            <Style TargetType="ListBox">
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBox">
+                            <ScrollViewer CanContentScroll="False">
+                                <ItemsPresenter HorizontalAlignment="Stretch"/>
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ItemContainerStyle">
+                    <Setter.Value>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                            <Setter Property="AllowDrop" Value="True"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                        <DockPanel Background="{TemplateBinding Background}" Margin="0,0,0,1">
+                                            <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsVisible,Mode=TwoWay}" Cursor="Hand">
+                                                <CheckBox.Style>
+                                                    <Style TargetType="CheckBox">
+                                                        <Setter Property="Width" Value="30"/>
+                                                        <Setter Property="Height" Value="30"/>
+                                                        <Setter Property="Cursor" Value="Hand"/>
+                                                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="CheckBox">
+                                                                    <Border>
+                                                                        <Path x:Name="EyePath" Width="20" Height="20" Fill="DimGray" Stretch="Uniform" Data="{StaticResource IconEye}"/>
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsChecked" Value="True">
+                                                                            <Setter TargetName="EyePath" Property="Fill" Value="Gainsboro"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </CheckBox.Style>
+                                            </CheckBox>
+                                            <Border DockPanel.Dock="Left" Width="30" Height="30" BorderBrush="DimGray" BorderThickness="1">
+                                                <Border Width="{Binding ThumbnailSize.Width,Mode=OneTime}" Height="{Binding ThumbnailSize.Height,Mode=OneWay}" Background="{Binding Thumbnail,Mode=OneWay}" RenderOptions.BitmapScalingMode="LowQuality"/>
+                                            </Border>
+                                            <TextBlock Text="{Binding Name,Mode=OneWay}" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" Margin="4,0,0,0" TextTrimming="CharacterEllipsis"/>
+                                        </DockPanel>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#8ECDF1"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="#FF1E9BE3"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ListBox.Style>
+    </ListBox>
+</DockPanel>

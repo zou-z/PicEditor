@@ -22,6 +22,9 @@
     <Compile Update="View\Panel\InsertPropertyPanel.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\Panel\LayerListPanel.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Style\Button.xaml">
@@ -55,6 +58,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Panel\InsertPropertyPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Panel\LayerListPanel.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

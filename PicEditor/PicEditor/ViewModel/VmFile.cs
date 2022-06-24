@@ -18,23 +18,23 @@ namespace PicEditor.ViewModel
 {
     internal class VmFile
     {
-        private IPictureSource? pictureSource = null;
+        private ILayerSource? layerSource = null;
         private PictureStatus? status = null;
         private PictureSourceInfo? pictureSourceInfo = null;
-        private RelayCommand<string>? openFileCommand = null; // openLink,openClipboard, drag in
+        private RelayCommand<bool>? openFileCommand = null; // openLink,openClipboard, drag in
 
         public PictureStatus Status => status ??= new PictureStatus();
 
         public PictureSourceInfo PictureSourceInfo => pictureSourceInfo ??= new PictureSourceInfo();
 
-        public RelayCommand<string> OpenFileCommand => openFileCommand ??= new RelayCommand<string>(OpenFile);
+        public RelayCommand<bool> OpenFileCommand => openFileCommand ??= new RelayCommand<bool>(OpenFile);
 
-        public void Initialize(IPictureSource? pictureSource)
+        public void Initialize(ILayerSource layerSource)
         {
-            this.pictureSource = pictureSource;
+            this.layerSource = layerSource;
         }
 
-        private void OpenFile(string? mode)
+        private void OpenFile(bool isOpenMode)
         {
             OpenFileDialog dialog = new()
             {
@@ -50,16 +50,17 @@ namespace PicEditor.ViewModel
                 else
                 {
                     var bitmap = FileUtil.ReadLocalFile(dialog.FileName);
-                    pictureSource?.AddPictureSource(bitmap, !Status.IsPictureOpened);
+                    layerSource?.AddLayer(bitmap);
                 }
-                if (Status.IsPictureOpened)
-                {
-                    Status.IsInsertingPicture = true;
-                }
-                else
-                {
-                    Status.IsPictureOpened = Status.IsFunctionOn = true;
-                }
+
+                //if (Status.IsPictureOpened)
+                //{
+                //    Status.IsInsertingPicture = true;
+                //}
+                //else
+                //{
+                //    Status.IsPictureOpened = Status.IsFunctionOn = true;
+                //}
             }
         }
     }

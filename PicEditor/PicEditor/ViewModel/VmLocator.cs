@@ -7,6 +7,8 @@
         private static readonly VmLayerDisplay vmLayerDisplay;
         private static readonly VmLayerManage vmLayerManage;
         private static readonly VmInsertPicture vmInsertPicture;
+        private static readonly VmLayer vmLayer;
+        private static readonly VmLayerList vmLayerList;
 
         public static VmFile File => vmFile;
 
@@ -18,6 +20,10 @@
 
         public static VmInsertPicture InsertPicture => vmInsertPicture;
 
+        public static VmLayer Layer => vmLayer;
+
+        public static VmLayerList LayerList => vmLayerList;
+
         static VmLocator()
         {
             vmFile = new VmFile();
@@ -25,12 +31,17 @@
             vmLayerDisplay = new VmLayerDisplay();
             vmLayerManage = new VmLayerManage();
             vmInsertPicture = new VmInsertPicture();
+            vmLayer = new VmLayer();
+            vmLayerList = new VmLayerList();
             ViewModelInit();
         }
 
         private static void ViewModelInit()
         {
-            vmFile.Initialize(vmLayerDisplay);
+            File.Initialize(Layer);
+            Layer.Initialize(LayerList);
+            LayerList.Initialize(Layer);
+
             vmLayerDisplay.Initialize(vmLayerManage, vmInsertPicture);
             vmLayerManage.Initialize(vmLayerDisplay);
             vmInsertPicture.Initialize(vmLayerDisplay);

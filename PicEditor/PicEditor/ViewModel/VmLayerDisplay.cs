@@ -20,11 +20,11 @@ namespace PicEditor.ViewModel
     {
         private ILayerManage? layerManage = null;
         private IInsertPicture? insertPicture = null;
-        private LayerInfo? layerInfo = null;
+        //private LayerInfo? layerInfo = null;
         private readonly ObservableCollection<UIElement> pictureLayers;
         private readonly ObservableCollection<UIElement> upperLayers;
 
-        public LayerInfo LayerInfo => layerInfo ??= new LayerInfo();
+        //public LayerInfo LayerInfo => layerInfo ??= new LayerInfo();
 
         public ObservableCollection<UIElement> PictureLayers => pictureLayers;
 
@@ -44,21 +44,21 @@ namespace PicEditor.ViewModel
 
         public void AddPictureSource(WriteableBitmap bitmap, bool isInit)
         {
-            if (isInit || LayerInfo.CanvasSize.Width == 0 && LayerInfo.CanvasSize.Height == 0)
-            {
-                PictureLayers.Clear();
-                LayerInfo.CanvasSize = new Size(bitmap.PixelWidth, bitmap.PixelHeight);
-                LayerInfo.Scale = 1.0;
-            }
+            //if (isInit || LayerInfo.CanvasSize.Width == 0 && LayerInfo.CanvasSize.Height == 0)
+            //{
+            //    PictureLayers.Clear();
+            //    LayerInfo.CanvasSize = new Size(bitmap.PixelWidth, bitmap.PixelHeight);
+            //    LayerInfo.Scale = 1.0;
+            //}
             bool isInsertPicture = !isInit && PictureLayers.Count > 0;
             var image = new ImageEx(GuidUtil.GetGuid(), bitmap, !isInsertPicture);
             PictureLayers.Add(image);
 
             layerManage?.AddLayer(image.GetID(), image.GetVisualBrush(), isInit);
-            layerManage?.SetLayerSize(image.GetID(), (int)LayerInfo.CanvasSize.Width, (int)LayerInfo.CanvasSize.Height);
+            //layerManage?.SetLayerSize(image.GetID(), (int)LayerInfo.CanvasSize.Width, (int)LayerInfo.CanvasSize.Height);
 
-            image.SetBinding(ImageEx.CanvasSizeProperty, new Binding("CanvasSize") { Source = LayerInfo, Mode = BindingMode.OneWay });
-            image.SetBinding(ImageEx.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });
+            //image.SetBinding(ImageEx.CanvasSizeProperty, new Binding("CanvasSize") { Source = LayerInfo, Mode = BindingMode.OneWay });
+            //image.SetBinding(ImageEx.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });
 
             // 插入图片
             if (isInsertPicture)
@@ -69,7 +69,7 @@ namespace PicEditor.ViewModel
                 if (UpperLayers.Count == 0)
                 {
                     insertBox = new InsertPictureBox();
-                    insertBox.SetBinding(RectSelectorBase.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });
+                    //insertBox.SetBinding(RectSelectorBase.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });
                     insertBox.SetBinding(RectSelectorBase.RealLeftProperty, new Binding("RealLeft") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
                     insertBox.SetBinding(RectSelectorBase.RealTopProperty, new Binding("RealTop") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
                     insertBox.SetBinding(RectSelectorBase.RealWidthProperty, new Binding("RealWidth") { Source = insertPicture?.GetPositionSource(), Mode = BindingMode.TwoWay });
@@ -137,27 +137,27 @@ namespace PicEditor.ViewModel
 
         public void LayerAdded(string guid, string? previousGuid)
         {
-            var bitmap = BitmapUtil.GetTransparentBitmap((int)LayerInfo.CanvasSize.Width, (int)LayerInfo.CanvasSize.Height);
-            var image = new ImageEx(guid, bitmap);
-            image.SetBinding(ImageEx.CanvasSizeProperty, new Binding("CanvasSize") { Source = LayerInfo, Mode = BindingMode.OneWay });
-            image.SetBinding(ImageEx.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });
-            if (previousGuid == null)
-            {
-                PictureLayers.Add(image);
-            }
-            else
-            {
-                for (int i = 0; i < PictureLayers.Count; ++i)
-                {
-                    if (PictureLayers[i] is IPictureLayer layer && layer != null && layer.GetID() == previousGuid)
-                    {
-                        PictureLayers.Insert(i + 1, image);
-                        break;
-                    }
-                }
-            }
-            layerManage?.SetLayerThumbnail(guid, image.GetVisualBrush());
-            layerManage?.SetLayerSize(guid, bitmap.PixelWidth, bitmap.PixelHeight);
+            //var bitmap = BitmapUtil.GetTransparentBitmap((int)LayerInfo.CanvasSize.Width, (int)LayerInfo.CanvasSize.Height);
+            //var image = new ImageEx(guid, bitmap);
+            //image.SetBinding(ImageEx.CanvasSizeProperty, new Binding("CanvasSize") { Source = LayerInfo, Mode = BindingMode.OneWay });
+            //image.SetBinding(ImageEx.ScaleProperty, new Binding("Scale") { Source = LayerInfo, Mode = BindingMode.OneWay });
+            //if (previousGuid == null)
+            //{
+            //    PictureLayers.Add(image);
+            //}
+            //else
+            //{
+            //    for (int i = 0; i < PictureLayers.Count; ++i)
+            //    {
+            //        if (PictureLayers[i] is IPictureLayer layer && layer != null && layer.GetID() == previousGuid)
+            //        {
+            //            PictureLayers.Insert(i + 1, image);
+            //            break;
+            //        }
+            //    }
+            //}
+            //layerManage?.SetLayerThumbnail(guid, image.GetVisualBrush());
+            //layerManage?.SetLayerSize(guid, bitmap.PixelWidth, bitmap.PixelHeight);
         }
 
         public void LayerDeleted(string guid)
@@ -197,7 +197,8 @@ namespace PicEditor.ViewModel
 
         public Size GetCanvasSize()
         {
-            return LayerInfo.CanvasSize;
+            //return LayerInfo.CanvasSize;
+            return new Size();
         }
     }
 }
